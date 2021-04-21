@@ -14,7 +14,7 @@ final class ArticleListTableViewController: UITableViewController {
     // MARK: - ViewController life cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        //LoadingIndicator.sharedInstance.showOnWindow()
+        LoadingIndicator.sharedInstance.showOnWindow()
         presenter?.startFetchingArticleDetails()
         setUp()
     }
@@ -51,10 +51,12 @@ extension ArticleListTableViewController {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         if let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ArticleListTableViewCell.self), for: indexPath) as? ArticleListTableViewCell {
+            
             let article = presenter?.getArticle(at: indexPath.row)
             let articleImage = UIImage(data: (article?.image) ?? Data()) ?? UIImage(named: "dummy")
-            cell.configure(image: articleImage, description: article?.description ?? "", author: article?.author ?? "")
+            cell.configure(image: articleImage, description: article?.description ?? "Description not available", author: article?.author ?? "Author Details not Available")
             return cell
         }
         
@@ -62,8 +64,11 @@ extension ArticleListTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // TODO: - Open the article Detail Page on cell tap
         
+        // TODO: - Open the article Detail Page on cell tap
+        if let articleDetails = presenter?.getArticle(at: indexPath.row) {
+          presenter?.showArticleDetail(forArticle: articleDetails)
+        }
     }
 }
 
@@ -79,7 +84,7 @@ extension ArticleListTableViewController: UITableViewDataSourcePrefetching {
 extension ArticleListTableViewController: ArticleListPresenterToViewProtocol {
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
         guard let newIndexPathsToReload = newIndexPathsToReload else {
-          //indicatorView.stopAnimating()
+          LoadingIndicator.sharedInstance.hide()
           tableView.isHidden = false
           tableView.reloadData()
           return
@@ -87,6 +92,7 @@ extension ArticleListTableViewController: ArticleListPresenterToViewProtocol {
         
         let indexPathsToReload = visibleIndexPathsToReload(intersecting: newIndexPathsToReload)
         tableView.reloadRows(at: indexPathsToReload, with: .automatic)
+        LoadingIndicator.sharedInstance.hide()
     }
     
     

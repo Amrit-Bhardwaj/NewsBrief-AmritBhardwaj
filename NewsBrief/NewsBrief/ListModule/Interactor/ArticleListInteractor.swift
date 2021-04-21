@@ -93,7 +93,7 @@ final class ArticleListInteractor {
         //3. page = 3, paegSize = 20
         //4. page = 4, paegSize = 10
         
-        let articleDetailsTask = GetArticleDetailsTask(apiKey: Api.key, country: "us", category: "business", pageSize: "20", page: String(self.currentPage))
+        let articleDetailsTask = GetArticleDetailsTask(apiKey: Api.key, country: "us", category: "business", pageSize: "30", page: String(self.currentPage))
         
         let dispatcher = NetworkDispatcher(environment: Environment(Env.debug.rawValue, host: AppConstants.baseUrl))
         
@@ -247,6 +247,6 @@ extension ArticleListInteractor: ArticleListPresenterToInteractorProtocol {
     
     func article(at index: Int) -> Article {
         let articleData = articles[index]
-        return Article(author: articleData.author, description: articleData.description, image: articleData.imageData)
+        return Article(author: articleData.author, description: articleData.description, image: articleData.imageData, title: articleData.title, publishedDate: articleData.publishedAt, content: articleData.content)
     }
 }

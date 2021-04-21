@@ -17,6 +17,10 @@
 		5B54A514262FDEEA00981640 /* DetailsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B54A512262FDEEA00981640 /* DetailsTableViewCell.xib */; };
 		5B54A51A262FE27300981640 /* TextTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B54A518262FE27300981640 /* TextTableViewCell.swift */; };
 		5B54A51B262FE27300981640 /* TextTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B54A519262FE27300981640 /* TextTableViewCell.xib */; };
+		5B54A523263010DA00981640 /* ArticleDetailsProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B54A522263010DA00981640 /* ArticleDetailsProtocols.swift */; };
+		5B54A52B263011A100981640 /* ArticleDetailsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B54A52A263011A100981640 /* ArticleDetailsPresenter.swift */; };
+		5B54A5302630121A00981640 /* ArticleDetailsIntereactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B54A52F2630121A00981640 /* ArticleDetailsIntereactor.swift */; };
+		5B54A544263012F800981640 /* ArticleDetailsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B54A543263012F800981640 /* ArticleDetailsRouter.swift */; };
 		5B7595B6262DE89700739D9F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7595B5262DE89700739D9F /* AppDelegate.swift */; };
 		5B7595B8262DE89700739D9F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7595B7262DE89700739D9F /* SceneDelegate.swift */; };
 		5B7595BA262DE89700739D9F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7595B9262DE89700739D9F /* ViewController.swift */; };
@@ -81,6 +85,10 @@
 		5B54A512262FDEEA00981640 /* DetailsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailsTableViewCell.xib; sourceTree = "<group>"; };
 		5B54A518262FE27300981640 /* TextTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextTableViewCell.swift; sourceTree = "<group>"; };
 		5B54A519262FE27300981640 /* TextTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextTableViewCell.xib; sourceTree = "<group>"; };
+		5B54A522263010DA00981640 /* ArticleDetailsProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailsProtocols.swift; sourceTree = "<group>"; };
+		5B54A52A263011A100981640 /* ArticleDetailsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailsPresenter.swift; sourceTree = "<group>"; };
+		5B54A52F2630121A00981640 /* ArticleDetailsIntereactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailsIntereactor.swift; sourceTree = "<group>"; };
+		5B54A543263012F800981640 /* ArticleDetailsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailsRouter.swift; sourceTree = "<group>"; };
 		5B7595B2262DE89700739D9F /* NewsBrief.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsBrief.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B7595B5262DE89700739D9F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5B7595B7262DE89700739D9F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -176,9 +184,45 @@
 		5B54A4FF262FD98100981640 /* DetailModule */ = {
 			isa = PBXGroup;
 			children = (
+				5B54A5382630129E00981640 /* Presenter */,
+				5B54A53C263012AA00981640 /* Protocols */,
+				5B54A5342630129400981640 /* Interactor */,
 				5B54A4FB262FD96300981640 /* View */,
+				5B54A548263012FD00981640 /* Router */,
 			);
 			path = DetailModule;
+			sourceTree = "<group>";
+		};
+		5B54A5342630129400981640 /* Interactor */ = {
+			isa = PBXGroup;
+			children = (
+				5B54A52F2630121A00981640 /* ArticleDetailsIntereactor.swift */,
+			);
+			path = Interactor;
+			sourceTree = "<group>";
+		};
+		5B54A5382630129E00981640 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				5B54A52A263011A100981640 /* ArticleDetailsPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		5B54A53C263012AA00981640 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				5B54A522263010DA00981640 /* ArticleDetailsProtocols.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		5B54A548263012FD00981640 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				5B54A543263012F800981640 /* ArticleDetailsRouter.swift */,
+			);
+			path = Router;
 			sourceTree = "<group>";
 		};
 		5B7595A9262DE89700739D9F = {
@@ -211,11 +255,11 @@
 				5BBF1499262E99E900A8F0A9 /* ReachabilityManager */,
 				5BBF146D262E985000A8F0A9 /* NetworkManager */,
 				5BBF143D262E93E900A8F0A9 /* ListModule */,
+				5B54A4FF262FD98100981640 /* DetailModule */,
 				5BBF14A5262E9BD900A8F0A9 /* Utilities */,
 				5B7595BB262DE89700739D9F /* Main.storyboard */,
 				5B7595C3262DE89A00739D9F /* LaunchScreen.storyboard */,
 				5B7595B9262DE89700739D9F /* ViewController.swift */,
-				5B54A4FF262FD98100981640 /* DetailModule */,
 				5B7595C1262DE89A00739D9F /* Assets.xcassets */,
 				5B7595C6262DE89A00739D9F /* Info.plist */,
 				5B7595BE262DE89700739D9F /* NewsBrief.xcdatamodeld */,
@@ -478,6 +522,7 @@
 			files = (
 				5B89D495262F2F0600B0B369 /* Article.swift in Sources */,
 				5BBF14C6262E9D8000A8F0A9 /* Date+Extension.swift in Sources */,
+				5B54A52B263011A100981640 /* ArticleDetailsPresenter.swift in Sources */,
 				5BBF14B4262E9C5000A8F0A9 /* LoadingIndicator.swift in Sources */,
 				5BBF1460262E979500A8F0A9 /* ArticleListPresenter.swift in Sources */,
 				5BBF14AF262E9C1F00A8F0A9 /* String+Extension.swift in Sources */,
@@ -487,10 +532,13 @@
 				5B8F760F262EBAC300A467A8 /* ArticleFileManager.swift in Sources */,
 				5B7595B6262DE89700739D9F /* AppDelegate.swift in Sources */,
 				5BBF1453262E971E00A8F0A9 /* ArticleListProtocols.swift in Sources */,
+				5B54A5302630121A00981640 /* ArticleDetailsIntereactor.swift in Sources */,
 				5BBF1477262E989100A8F0A9 /* Response.swift in Sources */,
+				5B54A544263012F800981640 /* ArticleDetailsRouter.swift in Sources */,
 				5B54A505262FDA1100981640 /* TitleSubTitleTableViewCell.swift in Sources */,
 				5B7595B8262DE89700739D9F /* SceneDelegate.swift in Sources */,
 				5BBF14C1262E9D2D00A8F0A9 /* ArticleModel.swift in Sources */,
+				5B54A523263010DA00981640 /* ArticleDetailsProtocols.swift in Sources */,
 				5B54A51A262FE27300981640 /* TextTableViewCell.swift in Sources */,
 				5BBF1442262E94B100A8F0A9 /* ArticleListRouter.swift in Sources */,
 				5BBF1435262E935000A8F0A9 /* ArticleListTableViewController.swift in Sources */,

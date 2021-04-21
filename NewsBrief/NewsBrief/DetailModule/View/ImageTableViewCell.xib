@@ -9,29 +9,35 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ImageTableViewCell" rowHeight="181" id="KGk-i7-Jjw" customClass="ImageTableViewCell" customModule="NewsBrief" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="181"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ImageTableViewCell" rowHeight="314" id="KGk-i7-Jjw" customClass="ImageTableViewCell" customModule="NewsBrief" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="314"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="181"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="314"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="caH-XZ-pid">
-                        <rect key="frame" x="20" y="20" width="280" height="141"/>
+                        <rect key="frame" x="20" y="20" width="280" height="280"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="caH-XZ-pid" secondAttribute="height" multiplier="1:1" id="1Hs-tw-i0Q"/>
+                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="280" id="uF3-1Y-bZk"/>
+                        </constraints>
                     </imageView>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="caH-XZ-pid" secondAttribute="bottom" constant="20" symbolic="YES" id="CMo-vI-Lj5"/>
-                    <constraint firstItem="caH-XZ-pid" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" symbolic="YES" id="Dow-I9-DZ7"/>
-                    <constraint firstItem="caH-XZ-pid" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" symbolic="YES" id="MGa-Pl-Hdk"/>
-                    <constraint firstAttribute="trailing" secondItem="caH-XZ-pid" secondAttribute="trailing" constant="20" symbolic="YES" id="dVG-CJ-WbM"/>
+                    <constraint firstItem="caH-XZ-pid" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="9QH-5d-1Ob"/>
+                    <constraint firstAttribute="trailing" secondItem="caH-XZ-pid" secondAttribute="trailing" constant="20" symbolic="YES" id="HaJ-8i-jvj"/>
+                    <constraint firstItem="caH-XZ-pid" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="IIr-Ny-XrZ"/>
+                    <constraint firstAttribute="bottom" secondItem="caH-XZ-pid" secondAttribute="bottom" constant="20" symbolic="YES" id="pyU-Fb-HsL"/>
+                    <constraint firstItem="caH-XZ-pid" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" symbolic="YES" id="qQO-Xw-JmZ"/>
+                    <constraint firstItem="caH-XZ-pid" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" symbolic="YES" id="taO-Dr-6FH"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="detailImageView" destination="caH-XZ-pid" id="U3z-QT-MJe"/>
             </connections>
-            <point key="canvasLocation" x="-4.3478260869565224" y="135.60267857142856"/>
+            <point key="canvasLocation" x="-4.3478260869565224" y="179.46428571428569"/>
         </tableViewCell>
     </objects>
 </document>

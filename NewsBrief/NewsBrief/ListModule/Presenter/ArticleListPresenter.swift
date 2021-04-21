@@ -19,9 +19,9 @@ final class ArticleListPresenter: ArticleListViewToPresenterProtocol {
         interactor?.fetchArticleDetails()
     }
     
-    func showArticleListController(navigationController: UINavigationController) {
-        
-    }
+//    func showArticleDetailController(navigationController: UINavigationController) {
+//
+//    }
 }
 
 extension ArticleListPresenter: ArticleListInteractorToPresenterProtocol {
@@ -48,5 +48,9 @@ extension ArticleListPresenter: ArticleListInteractorToPresenterProtocol {
     
     func getArticle(at index: Int) -> Article {
         return interactor?.article(at: index) ?? Article()
+    }
+    
+    func showArticleDetail(forArticle article: Article) {
+        router?.presentArticleDetailScreen(fromView: view!, forArticle: article)
     }
 }

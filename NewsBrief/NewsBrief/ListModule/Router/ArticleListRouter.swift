@@ -35,6 +35,14 @@ final class ArticleListRouter: ArticleListPresenterToRouterProtocol {
     static var mainstoryboard: UIStoryboard{
         return UIStoryboard(name:"Main",bundle: Bundle.main)
     }
+    
+    func presentArticleDetailScreen(fromView view: ArticleListPresenterToViewProtocol, forArticle article: Article) {
+        let aritcleDetailViewController = ArticleDetailsRouter.createModule(forArticle: article)
+        
+        if let sourceView = view as? UIViewController {
+           sourceView.navigationController?.pushViewController(aritcleDetailViewController, animated: true)
+        }
+    }
 }
 
 

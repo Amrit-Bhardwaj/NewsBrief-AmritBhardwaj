@@ -15,7 +15,7 @@ final class ImageTableViewCell: UITableViewCell {
         super.awakeFromNib()
     }
     
-    func configure(image: UIImage) {
+    func configure(image: UIImage?) {
         detailImageView.image = image
     }
 

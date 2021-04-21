@@ -15,7 +15,7 @@ protocol ArticleListViewToPresenterProtocol: class {
     var interactor: ArticleListPresenterToInteractorProtocol? {get set}
     var router: ArticleListPresenterToRouterProtocol? {get set}
     func startFetchingArticleDetails()
-    func showArticleListController(navigationController: UINavigationController)
+    func showArticleDetail(forArticle article: Article)
     func getTotalArticleCount() -> Int?
     func getCurrentArticleCount() -> Int?
     func getArticle(at index: Int) -> Article
@@ -28,6 +28,7 @@ protocol ArticleListPresenterToViewProtocol: class{
 }
 
 protocol ArticleListPresenterToRouterProtocol: class {
+    func presentArticleDetailScreen(fromView view: ArticleListPresenterToViewProtocol, forArticle article: Article)
     static func createModule()-> ArticleListTableViewController
 }
 

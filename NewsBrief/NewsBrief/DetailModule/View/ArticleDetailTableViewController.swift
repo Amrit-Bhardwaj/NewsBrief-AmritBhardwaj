@@ -9,16 +9,41 @@ import UIKit
 
 final class ArticleDetailTableViewController: UITableViewController {
         
+    var presenter: ArticleDetailsViewToPresenterProtocol?
+    private var articleData: Article?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        articleData = presenter?.getArticleDetails()
+        //LoadingIndicator.sharedInstance.showOnWindow()
+        //presenter?.startFetchingArticleDetails()
+        setUp()
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
+    
+    private func setUp() {
+        
+        // TODO: - title should be fetched from localized file
+        title = "News"
+        
+        // TODO: - Setup cell theme from ThemingManager
+        tableView.register(TitleSubTitleTableViewCell.self, cellIdentifier: String(describing: TitleSubTitleTableViewCell.self))
+        tableView.register(ImageTableViewCell.self, cellIdentifier: String(describing: ImageTableViewCell.self))
+        tableView.register(DetailsTableViewCell.self, cellIdentifier: String(describing: DetailsTableViewCell.self))
+        tableView.register(TextTableViewCell.self, cellIdentifier: String(describing: TextTableViewCell.self))
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = tableView.rowHeight
+        tableView.tableFooterView = UIView()
+    }
+}
 
+extension ArticleDetailTableViewController {
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -27,63 +52,44 @@ final class ArticleDetailTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return 4
     }
-
-    /*
+    
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
+        
+        switch indexPath.row {
+        
+        case 0:
+            if let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: TitleSubTitleTableViewCell.self), for: indexPath) as? TitleSubTitleTableViewCell {
+                cell.configure(title: articleData?.title ?? "Title Not available", subTitle: articleData?.description ?? "News Description")
+                return cell
+            }
+        case 1:
+            if let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ImageTableViewCell.self), for: indexPath) as? ImageTableViewCell {
+                let articleImage = UIImage(data: (articleData?.image) ?? Data()) ?? UIImage(named: "dummy")
+                cell.configure(image: articleImage)
+                return cell
+            }
+        case 2:
+            if let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: DetailsTableViewCell.self), for: indexPath) as? DetailsTableViewCell {
+                cell.configure(author: articleData?.author ?? "Author not found", publishedDate: articleData?.publishedDate ?? "Today's Date", numberOfLikes: "32", numberOfComments: "45")
+                return cell
+            }
+        case 3:
+            if let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: TextTableViewCell.self), for: indexPath) as? TextTableViewCell {
+                cell.configure(withText: articleData?.content ?? "Article Content Not found")
+                return cell
+            }
+        default:
+            return UITableViewCell()
+        }
+        
+        return UITableViewCell()
     }
-    */
+    
+}
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
+extension ArticleDetailTableViewController: ArticleDetailsPresenterToViewProtocol {
     
 }
