@@ -16,8 +16,10 @@ struct ArticleModel {
     var urlToImage: String?
     var publishedAt: String?
     var content: String?
+    var imageData: Data?
     
     // TODO: - Json keys to be put in separate constant file
+    // This can be implemented using decodable
     init(jsonData: [String: AnyObject]?) {
         
         if let json = jsonData {

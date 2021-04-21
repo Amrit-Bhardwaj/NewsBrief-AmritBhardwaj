@@ -20,10 +20,15 @@ final class ArticleListPresenter: ViewToPresenterProtocol {
     }
     
     func showArticleListController(navigationController: UINavigationController) {
+        
     }
 }
 
 extension ArticleListPresenter: InteractorToPresenterProtocol {
+    func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
+        view?.onFetchCompleted(with: newIndexPathsToReload)
+    }
+    
     
     func imageFetchedSuccess(imageData: Data, title: String, explanation: String) {
         view?.showArticleList(imageData: imageData, title: title, explanation: explanation)
@@ -33,4 +38,15 @@ extension ArticleListPresenter: InteractorToPresenterProtocol {
         view?.showError()
     }
     
+    func getTotalArticleCount() -> Int? {
+        return interactor?.totalArticleCount()
+    }
+    
+    func getCurrentArticleCount() -> Int? {
+        return interactor?.getCurrentArticleCount()
+    }
+    
+    func getArticle(at index: Int) -> Article {
+        return interactor?.article(at: index) ?? Article()
+    }
 }

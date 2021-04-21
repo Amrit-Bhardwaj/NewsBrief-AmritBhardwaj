@@ -16,7 +16,7 @@ final class ArticleFileManager: FileManagerProtocol {
     /* This function is used to save the data with the fileName into Application support directory
      */
     func save(fileName: String, file: Data) {
-        let directoryURL = manager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+        let directoryURL = manager.urls(for: .documentDirectory, in: .userDomainMask).first
         if let fileURL = directoryURL?.appendingPathComponent(fileName) {
             if !manager.fileExists(atPath: fileURL.path) {
                 

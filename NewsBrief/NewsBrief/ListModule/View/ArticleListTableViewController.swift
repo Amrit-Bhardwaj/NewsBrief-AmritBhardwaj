@@ -10,8 +10,6 @@ import UIKit
 final class ArticleListTableViewController: UITableViewController {
     
     var presenter: ViewToPresenterProtocol?
-    
-    // private Model
 
     // MARK: - ViewController life cycle Methods
     override func viewDidLoad() {
@@ -43,14 +41,20 @@ extension ArticleListTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 2
+        
+        if let totalCount = presenter?.getTotalArticleCount() {
+            return totalCount
+        } else {
+            return 0
+        }
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ArticleListTableViewCell.self), for: indexPath) as? ArticleListTableViewCell {
-            cell.configure(image: UIImage(named: "dummy"), description: "This is description dummy Text ", author: "Mark Twain")
+            let article = presenter?.getArticle(at: indexPath.row)
+            let articleImage = UIImage(data: (article?.image) ?? Data()) ?? UIImage(named: "dummy")
+            cell.configure(image: articleImage, description: article?.description ?? "", author: article?.author ?? "")
             return cell
         }
         
@@ -66,11 +70,25 @@ extension ArticleListTableViewController {
 extension ArticleListTableViewController: UITableViewDataSourcePrefetching {
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        //
+        if indexPaths.contains(where: isLoadingCell) {
+            presenter?.startFetchingArticleDetails()
+        }
     }
 }
 
 extension ArticleListTableViewController: PresenterToViewProtocol {
+    func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
+        guard let newIndexPathsToReload = newIndexPathsToReload else {
+          //indicatorView.stopAnimating()
+          tableView.isHidden = false
+          tableView.reloadData()
+          return
+        }
+        
+        let indexPathsToReload = visibleIndexPathsToReload(intersecting: newIndexPathsToReload)
+        tableView.reloadRows(at: indexPathsToReload, with: .automatic)
+    }
+    
     
     func showArticleList(imageData: Data, title: String, explanation: String) {
         //self.astroDetails = (imageData, title, explanation)
@@ -91,4 +109,20 @@ extension ArticleListTableViewController: PresenterToViewProtocol {
                   actions: [(title: "Ok",
                              event: errorActionHandler)])
     }
+}
+
+private extension ArticleListTableViewController {
+  func isLoadingCell(for indexPath: IndexPath) -> Bool {
+    if let currentArticleCount = presenter?.getCurrentArticleCount() {
+        return indexPath.row >= currentArticleCount
+    } else {
+        return false
+    }
+  }
+  
+  func visibleIndexPathsToReload(intersecting indexPaths: [IndexPath]) -> [IndexPath] {
+    let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows ?? []
+    let indexPathsIntersection = Set(indexPathsForVisibleRows).intersection(indexPaths)
+    return Array(indexPathsIntersection)
+  }
 }

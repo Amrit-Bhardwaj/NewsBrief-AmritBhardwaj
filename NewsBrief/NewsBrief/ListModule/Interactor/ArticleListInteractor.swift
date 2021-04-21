@@ -5,20 +5,33 @@
 //  Created by Amrit Bhardwaj on 20/04/21.
 //
 
-import Foundation
+import UIKit
 
-final class ArticleListInteractor: PresenterToInteractorProtocol {
+final class ArticleListInteractor {
     
     var presenter: InteractorToPresenterProtocol?
     var databaseManager: DatabaseManagerProtocol?
     var fileManager: FileManagerProtocol?
+    
+    private var articles: [ArticleModel] = []
+    private var currentPage = 1
+    private var total = 0
+    private var isFetchInProgress = false
+    
+    private var currentCount: Int {
+        return articles.count
+    }
+    
+    func article(at index: Int) -> ArticleModel {
+        return articles[index]
+    }
     
     //1. Fetch the Article details from news API, map it to ArticleModel and save the details to coredata entity
     //2. Download the image using the image url and save it to Application support directory with name+date as fileName
     
     // TODO: -  We can use an Operation Queue and enqueue the two tasks and set dependency
     // TODO: - using a Dispatch Group to perform concurrent download of images
-    
+
      func fetchArticleDetails() {
         
         //Fetching the last entry in the dB, sorted based on date
@@ -68,17 +81,70 @@ final class ArticleListInteractor: PresenterToInteractorProtocol {
     
     private func performFetch() {
         
-        // fetch 20 Items per page
+        guard !isFetchInProgress else {
+            return
+        }
         
-        let articleDetailsTask = GetArticleDetailsTask(apiKey: Api.key, country: "us", category: "business", pageSize: "20", page: "0")
+        isFetchInProgress = true
+        
+        // fetch 20 Items per page
+        //1. page = 1, pageSize = 20, 20 image urls
+        //2. page = 2, pagesSize = 20, image urls
+        //3. page = 3, paegSize = 20
+        //4. page = 4, paegSize = 10
+        
+        let articleDetailsTask = GetArticleDetailsTask(apiKey: Api.key, country: "us", category: "business", pageSize: "20", page: String(self.currentPage))
         
         let dispatcher = NetworkDispatcher(environment: Environment(Env.debug.rawValue, host: AppConstants.baseUrl))
         
         articleDetailsTask.execute(in: dispatcher) { [weak self] (json) in
             
-            if let jsonData = json as? [String: AnyObject], let articles = jsonData["articles"] as? [AnyObject] {
+            DispatchQueue.main.async { [self] in
                 
+                self?.currentPage += 1
+                self?.isFetchInProgress = false
+                
+                if let jsonData = json as? [String: AnyObject],
+                   let totalResults = jsonData["totalResults"] as? Int,
+                   let articles = jsonData["articles"] as? [AnyObject] {
+                    
+                    self?.total = totalResults
+                    var articleResponse: [ArticleModel] = []
+                    for article in articles {
+                        if let article = article as? [String: AnyObject] {
+                            let newArticle = ArticleModel(jsonData: article)
+                            articleResponse.append(newArticle)
+                        }
+                    }
+                    
+                    var articleUrls: [String?] = []
+                    for responseItem in articleResponse {
+                        articleUrls.append(responseItem.urlToImage)
+                    }
+                    
+                    self?.downloadImage(withUrls: articleUrls) { (success) in
+                        
+                        for index in 0..<articleResponse.count {
+                            articleResponse[index].imageData = success[index]
+                        }
+                        
+                        self?.articles.append(contentsOf: articleResponse)
+                        
+                        if let currentPage = self?.currentPage, currentPage > 2 {
+                            let indexPathsToReload = self?.calculateIndexPathsToReload(from: articleResponse)
+                            self?.presenter?.onFetchCompleted(with: indexPathsToReload)
+                            
+                        } else {
+                            self?.presenter?.onFetchCompleted(with: .none)
+                        }
+                        
+                    } failure: { (error) in
+                        self?.presenter?.imageFetchFailed()
+                    }
+                }
             }
+            
+            
             
 //            if let imageUrl = articleModel.url {
 //
@@ -105,29 +171,52 @@ final class ArticleListInteractor: PresenterToInteractorProtocol {
 //                })
 //            }
             
-        } failure: { (error) in
-            self.presenter?.imageFetchFailed()
+        } failure: { [weak self] (error) in
+            self?.isFetchInProgress = false
+            self?.presenter?.imageFetchFailed()
         }
     }
     
-    // Download the Attachment Data
-    private func downloadImage(withUrl url: String, success: @escaping ((Any) -> Void), failure: @escaping ((Error?) -> Void)) {
+    private func calculateIndexPathsToReload(from newArticles: [ArticleModel]) -> [IndexPath] {
+      let startIndex = articles.count - newArticles.count
+      let endIndex = startIndex + newArticles.count
+      return (startIndex..<endIndex).map { IndexPath(row: $0, section: 0) }
+    }
+    
+    
+    // Download the Attachment Data for the articles of a given Page
+    private func downloadImage(withUrls urls: [String?], success: @escaping (([Data?]) -> Void), failure: @escaping ((Error?) -> Void)) {
         
-        //TODO: - The url should be split into baseurl and relative path
-        //TODO: - The constants should be moved to AppConstants
-        //        let baseUrl = url.components(separatedBy: "//")[1].components(separatedBy: "/").first
-        
-        let dispatcher = NetworkDispatcher(environment: Environment(Env.debug.rawValue, host: url))
-        let attachmentDownloadTask = DownloadAttachmentDataTask(path: "")
-        
-        attachmentDownloadTask.execute(in: dispatcher) { (data) in
-            success(data)
+        let group = DispatchGroup()
+        var imageDataArray = [Data?].init(repeating: nil, count: urls.count)
+        for index in 0..<urls.count {
             
-        } failure: { (error) in
-            NSLog("Could not download the image")
-            failure(error)
+            guard let url = urls[index] else {
+                continue
+            }
+            
+            group.enter()
+            let dispatcher = NetworkDispatcher(environment: Environment(Env.debug.rawValue, host: url))
+            let attachmentDownloadTask = DownloadAttachmentDataTask(path: "")
+            
+            attachmentDownloadTask.execute(in: dispatcher) { (data) in
+                    
+                    if let data = data as? Data {
+                        // TODO: - mapping image with article
+                        imageDataArray[index] = data
+                        self.saveToFileSystem(withFileName: String(url.hash), fileData: data)
+                        group.leave()
+                    }
+                
+            } failure: { (error) in
+                NSLog("Could not download the image for \(String(describing: index))")
+                group.leave()
+            }
         }
         
+        group.notify(queue: .main) {
+            success(imageDataArray)
+        }
     }
     
     // Save the downloaded image to file System
@@ -143,5 +232,21 @@ final class ArticleListInteractor: PresenterToInteractorProtocol {
         let effectiveDate = (data.publishedAt?.toDateWithFormat(withFormat: "yyyy-MM-dd"))!.convertToLocalTime()
         
         databaseManager?.save(date: effectiveDate, explanation: data.description!, filePath: fileName, title: data.title!)
+    }
+}
+
+extension ArticleListInteractor: PresenterToInteractorProtocol {
+    
+    func getCurrentArticleCount() -> Int? {
+        return currentCount
+    }
+    
+    func totalArticleCount() -> Int? {
+        return total
+    }
+    
+    func article(at index: Int) -> Article {
+        let articleData = articles[index]
+        return Article(author: articleData.author, description: articleData.description, image: articleData.imageData)
     }
 }
