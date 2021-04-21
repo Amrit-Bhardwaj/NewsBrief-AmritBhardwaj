@@ -39,6 +39,7 @@ final class ArticleListTableViewController: UITableViewController {
         /// Setting the table cell heigt to automatic dimension
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = tableView.rowHeight
+        tableView.separatorStyle = .none
     }
 }
 
@@ -63,11 +64,16 @@ extension ArticleListTableViewController {
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ArticleListTableViewCell.self), for: indexPath) as? ArticleListTableViewCell {
             
-            let article = presenter?.getArticle(at: indexPath.row)
-            let articleImage = UIImage(data: (article?.image) ?? Data()) ?? UIImage(named: "dummy")
-            
-            /// Configuring the cell
-            cell.configure(image: articleImage, description: article?.description ?? "Description not available", author: article?.author ?? "Author Details not Available")
+            if isLoadingCell(for: indexPath) {
+                cell.configure(image: .none, description: .none, author: .none)
+            } else {
+                
+                let article = presenter?.getArticle(at: indexPath.row)
+                let articleImage = UIImage(data: (article?.image) ?? Data()) ?? UIImage(named: "dummy")
+                
+                /// Configuring the cell
+                cell.configure(image: articleImage, description: article?.description ?? "Description not available", author: article?.author ?? "Author Details not Available")
+            }
             
             return cell
         }
@@ -101,16 +107,19 @@ extension ArticleListTableViewController: ArticleListPresenterToViewProtocol {
         guard let newIndexPathsToReload = newIndexPathsToReload else {
             LoadingIndicator.sharedInstance.hide()
             tableView.isHidden = false
+            tableView.separatorStyle = .singleLine
             tableView.reloadData()
             return
         }
         
         let indexPathsToReload = visibleIndexPathsToReload(intersecting: newIndexPathsToReload)
         tableView.reloadRows(at: indexPathsToReload, with: .automatic)
+        tableView.separatorStyle = .singleLine
         LoadingIndicator.sharedInstance.hide()
     }
     
     func showError() {
+        tableView.separatorStyle = .singleLine
         LoadingIndicator.sharedInstance.hide()
         let errorActionHandler: ((UIAlertAction) -> Void) = {[weak self] (action) in
             self?.tableView.reloadData()
