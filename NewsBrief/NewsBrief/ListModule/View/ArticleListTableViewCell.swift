@@ -7,6 +7,9 @@
 
 import UIKit
 
+/*
+ 'ArticleListTableViewCell' implements and configurs the cell for news list View
+ */
 final class ArticleListTableViewCell: UITableViewCell {
     
     
@@ -16,22 +19,14 @@ final class ArticleListTableViewCell: UITableViewCell {
     @IBOutlet private weak var articleDescription: UILabel!
     @IBOutlet private weak var articleAuthor: UILabel!
     
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-    
+    /// This function is used to save the data with the fileName into Application support directory
+    /// - Parameters:
+    ///   - image: List View Image
+    ///   - description: News Description
+    ///   - author: Author String
     func configure(image: UIImage?, description: String, author: String) {
         articleAuthor.text = author
         articleDescription.text = description
         articleImageView.image = image
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-    
 }

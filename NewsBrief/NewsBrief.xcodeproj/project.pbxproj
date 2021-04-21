@@ -57,6 +57,8 @@
 		5BBF14D4262EA86000A8F0A9 /* ArticleListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BBF14D2262EA86000A8F0A9 /* ArticleListTableViewCell.xib */; };
 		5BCA576226304C800052DFC8 /* GetArticleMetaTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCA576126304C800052DFC8 /* GetArticleMetaTask.swift */; };
 		5BCA5767263052280052DFC8 /* ArticleMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCA5766263052280052DFC8 /* ArticleMeta.swift */; };
+		5BCA576C263071140052DFC8 /* NewsArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCA576B263071140052DFC8 /* NewsArticle.swift */; };
+		5BCA57742630717D0052DFC8 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCA57732630717D0052DFC8 /* DatabaseManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -133,6 +135,8 @@
 		5BBF14D2262EA86000A8F0A9 /* ArticleListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArticleListTableViewCell.xib; sourceTree = "<group>"; };
 		5BCA576126304C800052DFC8 /* GetArticleMetaTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetArticleMetaTask.swift; sourceTree = "<group>"; };
 		5BCA5766263052280052DFC8 /* ArticleMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleMeta.swift; sourceTree = "<group>"; };
+		5BCA576B263071140052DFC8 /* NewsArticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsArticle.swift; sourceTree = "<group>"; };
+		5BCA57732630717D0052DFC8 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -254,6 +258,7 @@
 			children = (
 				5B7595B5262DE89700739D9F /* AppDelegate.swift */,
 				5B7595B7262DE89700739D9F /* SceneDelegate.swift */,
+				5BCA57782630721E0052DFC8 /* DatabaseManager */,
 				5B54A4F0262FD14100981640 /* FileManager */,
 				5BBF14CA262E9E4100A8F0A9 /* Entities */,
 				5BBF1499262E99E900A8F0A9 /* ReachabilityManager */,
@@ -386,8 +391,17 @@
 				5BBF14C0262E9D2D00A8F0A9 /* ArticleModel.swift */,
 				5B89D494262F2F0600B0B369 /* Article.swift */,
 				5BCA5766263052280052DFC8 /* ArticleMeta.swift */,
+				5BCA576B263071140052DFC8 /* NewsArticle.swift */,
 			);
 			path = Entities;
+			sourceTree = "<group>";
+		};
+		5BCA57782630721E0052DFC8 /* DatabaseManager */ = {
+			isa = PBXGroup;
+			children = (
+				5BCA57732630717D0052DFC8 /* DatabaseManager.swift */,
+			);
+			path = DatabaseManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -539,6 +553,7 @@
 				5B8F760F262EBAC300A467A8 /* ArticleFileManager.swift in Sources */,
 				5B7595B6262DE89700739D9F /* AppDelegate.swift in Sources */,
 				5BBF1453262E971E00A8F0A9 /* ArticleListProtocols.swift in Sources */,
+				5BCA576C263071140052DFC8 /* NewsArticle.swift in Sources */,
 				5B54A5302630121A00981640 /* ArticleDetailsIntereactor.swift in Sources */,
 				5BBF1477262E989100A8F0A9 /* Response.swift in Sources */,
 				5B54A544263012F800981640 /* ArticleDetailsRouter.swift in Sources */,
@@ -563,6 +578,7 @@
 				5BBF147C262E98BA00A8F0A9 /* NetworkDispatcher.swift in Sources */,
 				5BBF1490262E999600A8F0A9 /* Task.swift in Sources */,
 				5B54A513262FDEEA00981640 /* DetailsTableViewCell.swift in Sources */,
+				5BCA57742630717D0052DFC8 /* DatabaseManager.swift in Sources */,
 				5BBF1486262E992000A8F0A9 /* GetArticleDetailsTask.swift in Sources */,
 				5BCA576226304C800052DFC8 /* GetArticleMetaTask.swift in Sources */,
 			);

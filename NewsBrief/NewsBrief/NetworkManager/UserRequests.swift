@@ -10,7 +10,7 @@ import Foundation
 /* This enum represents a request object to backend server
  */
 public enum UserRequests: Request {
-
+    
     case login(username: String, password: String)
     case articleDetails(country: String, category: String, apiKey: String, pageSize: String, page: String)
     case downloadImage(path: String)
@@ -41,16 +41,16 @@ public enum UserRequests: Request {
     public var parameters: RequestParams {
         switch self {
         case .login(let username, let password):
-            return .body(["user" : username, "pass" : password])
+            return .body([ParamKeys.user : username, ParamKeys.pass : password])
         case .articleDetails(let country, let category, let apiKey, let pageSize, let page):
-            return .url(["country" : country, "category": category, "apiKey" : apiKey, "pageSize": pageSize, "page": page])
+            return .url([ParamKeys.country : country, ParamKeys.category: category, ParamKeys.apiKey : apiKey, ParamKeys.pageSize: pageSize, ParamKeys.page: page])
         case .downloadImage(_):
             return .url(nil)
         case .articleMeta(_):
             return .url(nil)
         }
     }
-
+    
     public var headers: [String : Any]? {
         switch self {
         default:

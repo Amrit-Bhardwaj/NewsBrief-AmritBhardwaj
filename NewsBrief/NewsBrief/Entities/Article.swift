@@ -7,6 +7,9 @@
 
 import Foundation
 
+/*
+ 'Article' is the encapsulates Article data to be shared across different layers
+ */
 struct Article {
     var author: String?
     var description: String?

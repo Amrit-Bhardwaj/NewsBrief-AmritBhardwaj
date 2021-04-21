@@ -7,6 +7,9 @@
 
 import Foundation
 
+/*
+ 'ArticleMeta' encapsulates Article MetaData to be shared across different layers
+ */
 struct ArticleMeta {
     var likes: String?
     var comments: String?

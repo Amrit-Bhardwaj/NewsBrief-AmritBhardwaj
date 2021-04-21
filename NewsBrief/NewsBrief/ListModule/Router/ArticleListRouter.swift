@@ -7,17 +7,19 @@
 
 import UIKit
 
+/*
+ 'ArticleListRouter' handles the navigation and wireframing of objects
+ */
 final class ArticleListRouter: ArticleListPresenterToRouterProtocol {
     
     static func createModule() -> ArticleListTableViewController {
         
-        // This can be set using xib too
-        let view = mainstoryboard.instantiateViewController(withIdentifier: "ArticleListTableViewController") as! ArticleListTableViewController
-
+        //TODO: - This can be set using xib too
+        let view = mainstoryboard.instantiateViewController(withIdentifier: String(describing: ArticleListTableViewController.self)) as! ArticleListTableViewController
+        
         let presenter: ArticleListViewToPresenterProtocol & ArticleListInteractorToPresenterProtocol = ArticleListPresenter()
         let interactor: ArticleListPresenterToInteractorProtocol = ArticleListInteractor()
         let router:ArticleListPresenterToRouterProtocol = ArticleListRouter()
-//        let databaseManager: DatabaseManagerProtocol = DatabaseManager()
         let fileManager: FileManagerProtocol = ArticleFileManager()
         
         view.presenter = presenter
@@ -25,22 +27,25 @@ final class ArticleListRouter: ArticleListPresenterToRouterProtocol {
         presenter.router = router
         presenter.interactor = interactor
         interactor.presenter = presenter
-        //interactor.databaseManager = databaseManager
         interactor.fileManager = fileManager
-        
         return view
-
     }
     
+    /// Main Storyboard Instance
     static var mainstoryboard: UIStoryboard{
-        return UIStoryboard(name:"Main",bundle: Bundle.main)
+        return UIStoryboard(name: FileConstants.main, bundle: Bundle.main)
     }
     
+    /// This function is used to present Article Detail View
+    ///
+    /// - Parameters:
+    ///   - view: Presenter View
+    ///   - article: Article Data for the Presented View
     func presentArticleDetailScreen(fromView view: ArticleListPresenterToViewProtocol, forArticle article: Article) {
         let aritcleDetailViewController = ArticleDetailsRouter.createModule(forArticle: article)
         
         if let sourceView = view as? UIViewController {
-           sourceView.navigationController?.pushViewController(aritcleDetailViewController, animated: true)
+            sourceView.navigationController?.pushViewController(aritcleDetailViewController, animated: true)
         }
     }
 }

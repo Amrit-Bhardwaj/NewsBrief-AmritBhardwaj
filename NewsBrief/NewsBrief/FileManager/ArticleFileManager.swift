@@ -7,19 +7,23 @@
 
 import UIKit
 
-/* This class handles all the file system related operations
+/*
+ This class handles all the file system related operations
  */
 final class ArticleFileManager: FileManagerProtocol {
     
     private var manager = FileManager.default
     
-    /* This function is used to save the data with the fileName into Application support directory
-     */
+    /// This function is used to save the data with the fileName into Application support directory
+    ///
+    /// - Parameters:
+    ///   - fileName: Name of the file to save
+    ///   - file: File Data
     func save(fileName: String, file: Data) {
-        let directoryURL = manager.urls(for: .documentDirectory, in: .userDomainMask).first
+        let directoryURL = manager.urls(for: .documentDirectory,
+                                        in: .userDomainMask).first
         if let fileURL = directoryURL?.appendingPathComponent(fileName) {
             if !manager.fileExists(atPath: fileURL.path) {
-                
                 do {
                     try file.write(to: fileURL)
                 } catch {
@@ -29,18 +33,21 @@ final class ArticleFileManager: FileManagerProtocol {
         }
     }
     
-    /* This function is used to open the fileName from Application support directory
-     */
+    /// This function is used to open the fileName from Application support directory
+    ///
+    /// - Parameters:
+    ///   - fileName: Name of the file to open
+    
+    /// - Returns: The file data
     func openFile(fileName: String) -> Data? {
-        let directoryURL = manager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-        
+        let directoryURL = manager.urls(for: .applicationSupportDirectory,
+                                        in: .userDomainMask).first
         if let fileURL = directoryURL?.appendingPathComponent(fileName) {
             if manager.fileExists(atPath: fileURL.path) {
                 let fileData = manager.contents(atPath: fileURL.path)
                 return fileData
             }
         }
-        
         return nil
     }
 }

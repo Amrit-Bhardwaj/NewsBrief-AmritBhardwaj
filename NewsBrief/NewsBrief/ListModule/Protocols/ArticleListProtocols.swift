@@ -8,7 +8,9 @@
 import UIKit
 
 // This file consists of all the protocols used throughout the Article List Module
-// Passing simple native data type as params for communication between layers to avoid dependency
+// Passing simple Data Types(structs) for communication between layers to avoid dependency
+
+/// This Protocol contains the APIs to communicate from VIEW --> PRESENTER
 protocol ArticleListViewToPresenterProtocol: class {
     
     var view: ArticleListPresenterToViewProtocol? {get set}
@@ -21,18 +23,23 @@ protocol ArticleListViewToPresenterProtocol: class {
     func getArticle(at index: Int) -> Article
 }
 
-protocol ArticleListPresenterToViewProtocol: class{
-    func showArticleList(imageData: Data, title: String, explanation: String)
+/// This Protocol contains the APIs to communicate from PRESENTER --> VIEW
+protocol ArticleListPresenterToViewProtocol: class {
+    
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?)
     func showError()
 }
 
+/// This Protocol contains the APIs to communicate from PRESENTER --> ROUTER
 protocol ArticleListPresenterToRouterProtocol: class {
+    
     func presentArticleDetailScreen(fromView view: ArticleListPresenterToViewProtocol, forArticle article: Article)
     static func createModule()-> ArticleListTableViewController
 }
 
+/// This Protocol contains the APIs to communicate from PRESENTER --> INTERACTOR
 protocol ArticleListPresenterToInteractorProtocol: class {
+    
     var presenter: ArticleListInteractorToPresenterProtocol? {get set}
     var databaseManager: DatabaseManagerProtocol? {get set}
     var fileManager: FileManagerProtocol? {get set}
@@ -42,22 +49,24 @@ protocol ArticleListPresenterToInteractorProtocol: class {
     func article(at index: Int) -> Article
 }
 
+/// This Protocol contains the APIs to communicate from INTERACTOR --> PRESENTER
 protocol ArticleListInteractorToPresenterProtocol: class {
     
-    func imageFetchedSuccess(imageData: Data, title: String, explanation: String)
-    func imageFetchFailed()
+    func onFetchFailed()
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?)
 }
 
+/// This Protocol contains the APIs to communicate with the dB
 protocol DatabaseManagerProtocol: class {
     
-    // typeAlias: Date, title, Explanation, Image file path
     func fetch() -> (Date?, String?, String?, String?)
     func save(date: Date, explanation: String, filePath: String, title: String)
     func update()
 }
 
+/// This Protocol contains the APIs to communicate with Filesystem
 protocol FileManagerProtocol: class {
+    
     func save(fileName: String, file: Data)
     func openFile(fileName: String) -> Data?
 }

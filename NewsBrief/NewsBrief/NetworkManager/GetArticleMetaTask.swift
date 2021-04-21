@@ -7,7 +7,10 @@
 
 import Foundation
 
-class GetArticleMetaTask: Task {
+/*
+ This class denotes the GET task article MetaData(Likes, Comments)
+ */
+final class GetArticleMetaTask: Task {
     
     var path: String
     

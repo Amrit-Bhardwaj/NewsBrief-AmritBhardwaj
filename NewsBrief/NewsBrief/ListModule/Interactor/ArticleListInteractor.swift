@@ -7,6 +7,9 @@
 
 import UIKit
 
+/*
+ 'ArticleListInteractor' handles the business logic for Article List View
+ */
 final class ArticleListInteractor {
     
     var presenter: ArticleListInteractorToPresenterProtocol?
@@ -14,71 +17,42 @@ final class ArticleListInteractor {
     var fileManager: FileManagerProtocol?
     
     private var articles: [ArticleModel] = []
+    
+    /// Current Page to be downloaded
     private var currentPage = 1
+    
+    /// Total Results to download
     private var total = 0
+    
+    /// Fetch Progress Indicator
     private var isFetchInProgress = false
     
+    /// Page Size to Fetch
+    private var pageSize = "30"
+    
+    /// Current count of articles downloaded
     private var currentCount: Int {
         return articles.count
     }
     
+    /// This function is used to return article at a given index
+    ///
+    /// - Parameters:
+    ///   - index: The index for which to get article data
+    
+    /// - Returns: Article Data at the given index
     func article(at index: Int) -> ArticleModel {
         return articles[index]
     }
     
-    //1. Fetch the Article details from news API, map it to ArticleModel and save the details to coredata entity
-    //2. Download the image using the image url and save it to Application support directory with name+date as fileName
+    // TODO: - We can also use an Operation Queue and enqueue the two tasks and set dependency
     
-    // TODO: -  We can use an Operation Queue and enqueue the two tasks and set dependency
-    // TODO: - using a Dispatch Group to perform concurrent download of images
-
-     func fetchArticleDetails() {
-        
-        //Fetching the last entry in the dB, sorted based on date
-        // We can improve the fetch using faulting and memory pruning
-//        let dbEntry = databaseManager?.fetch()
-//        let currenEffectiveDate = Date().effectiveCurrentDate().convertToLocalTime()
-//
-//
-//        // Case 1: if network is reachable and dB does not have any entry for current Date, We trigger API call
-//        if NetworkReachabilityManager.shared.connectedToNetwork() {
-//
-//            if dbEntry == nil || dbEntry?.0 != currenEffectiveDate {
-//                performFetch()
-//
-//            } else {
-//
-//                // Case 4: when Internet is available and dB has entry for current Date, we show the image from directory
-//                if let dBData = dbEntry, dBData.0 == currenEffectiveDate {
-//
-//                    let imageData = fileManager?.openFile(fileName: dBData.3!)
-//                    self.presenter?.imageFetchedSuccess(imageData: imageData!, title: dBData.1!, explanation: dBData.2!)
-//                }
-//            }
-//
-//        } else {
-//
-//            // Case 2: if network is not reachable and dB has entry for current Date, we show the image from directory
-//            if let dBData = dbEntry, dBData.0 == currenEffectiveDate {
-//
-//                let imageData = fileManager?.openFile(fileName: dBData.3!)
-//                self.presenter?.imageFetchedSuccess(imageData: imageData!, title: dBData.1!, explanation: dBData.2!)
-//            }
-//
-//            // Case 3: if network is not reachable and dB does not have an entry for current Date, fetch the last available entry in the dB and show its image from directory
-//            if let dBData = dbEntry, dBData.0 != nil && dBData.0 != currenEffectiveDate {
-//
-//                let imageData = fileManager?.openFile(fileName: dBData.3!)
-//                self.presenter?.imageFetchedSuccess(imageData: imageData!, title: dBData.1!, explanation: dBData.2!)
-//
-//            }
-//
-//            self.presenter?.imageFetchFailed()
-//        }
+    /// This function is used to fetch the Article Details from remote
+    func fetchArticleDetails() {
         performFetch()
-        
     }
     
+    /// This function is used to perform fetch task
     private func performFetch() {
         
         guard !isFetchInProgress else {
@@ -87,28 +61,29 @@ final class ArticleListInteractor {
         
         isFetchInProgress = true
         
-        // fetch 20 Items per page
-        //1. page = 1, pageSize = 20, 20 image urls
-        //2. page = 2, pagesSize = 20, image urls
-        //3. page = 3, paegSize = 20
-        //4. page = 4, paegSize = 10
+        /// ArticleDetails Task, Fetching 30 Items per page
+        let articleDetailsTask = GetArticleDetailsTask(apiKey: Api.key, country: ParamKeys.us, category: ParamKeys.business, pageSize: self.pageSize, page: String(self.currentPage))
         
-        let articleDetailsTask = GetArticleDetailsTask(apiKey: Api.key, country: "us", category: "business", pageSize: "30", page: String(self.currentPage))
-        
+        /// Dispatcher instance to dispatch tasks
         let dispatcher = NetworkDispatcher(environment: Environment(Env.debug.rawValue, host: AppConstants.baseUrl))
         
         articleDetailsTask.execute(in: dispatcher) { [weak self] (json) in
             
             DispatchQueue.main.async { [self] in
                 
+                /// Incrementing the Current page count after previous page is downloaded
                 self?.currentPage += 1
                 self?.isFetchInProgress = false
                 
+                /// Parsing the Response Object
                 if let jsonData = json as? [String: AnyObject],
-                   let totalResults = jsonData["totalResults"] as? Int,
-                   let articles = jsonData["articles"] as? [AnyObject] {
+                   let totalResults = jsonData[JSONKeys.totalResults] as? Int,
+                   let articles = jsonData[JSONKeys.articles] as? [AnyObject] {
                     
+                    /// Setting the total Results count
                     self?.total = totalResults
+                    
+                    /// Collecting the Article Response for the page requested
                     var articleResponse: [ArticleModel] = []
                     for article in articles {
                         if let article = article as? [String: AnyObject] {
@@ -117,21 +92,26 @@ final class ArticleListInteractor {
                         }
                     }
                     
+                    /// Retrieving the article Image Urls for each article response
                     var articleUrls: [String?] = []
                     for responseItem in articleResponse {
                         articleUrls.append(responseItem.urlToImage)
                     }
                     
+                    /// Performing the Download of all the images for the current page
                     self?.downloadImage(withUrls: articleUrls) { (success) in
                         
+                        /// Setting the image Data to the response Objects
                         for index in 0..<articleResponse.count {
                             articleResponse[index].imageData = success[index]
                         }
                         
                         self?.articles.append(contentsOf: articleResponse)
                         
+                        /// If the current page is not the first one, we calculate indexPath to reload
                         if let currentPage = self?.currentPage, currentPage > 2 {
                             let indexPathsToReload = self?.calculateIndexPathsToReload(from: articleResponse)
+                            
                             self?.presenter?.onFetchCompleted(with: indexPathsToReload)
                             
                         } else {
@@ -139,122 +119,126 @@ final class ArticleListInteractor {
                         }
                         
                     } failure: { (error) in
-                        self?.presenter?.imageFetchFailed()
+                        self?.presenter?.onFetchFailed()
                     }
                 }
             }
             
-            
-            
-//            if let imageUrl = articleModel.url {
-//
-//                let fileName = imageUrl.components(separatedBy: "//")[1].components(separatedBy: "/").last!
-//
-//                self?.downloadImage(withUrl: imageUrl, success: { (data) in
-//
-//                    // 1. Save the data to file system and return the image
-//                    // 2. Make an entry to dB with the data
-//
-//                    if let data = data as? Data {
-//                        DispatchQueue.main.async {
-//
-//                            self?.saveToFileSystem(withFileName: fileName, fileData: data)
-//
-//                            self?.saveTodB(attachmentData: articleModel)
-//
-//                            self?.presenter?.imageFetchedSuccess(imageData: data, title: articleModel.title!, explanation: articleModel.description!)
-//                        }
-//                    }
-//
-//                }, failure: { (error) in
-//                    self?.presenter?.imageFetchFailed()
-//                })
-//            }
-            
         } failure: { [weak self] (error) in
             self?.isFetchInProgress = false
-            self?.presenter?.imageFetchFailed()
+            self?.presenter?.onFetchFailed()
         }
     }
     
+    /// This function is used to calculate the IndexPaths for which we need to reload the data on the view
+    ///
+    /// - Parameters:
+    ///   - newArticles: New Articles fetched
+    /// - Returns: Array of indexPaths to reload
     private func calculateIndexPathsToReload(from newArticles: [ArticleModel]) -> [IndexPath] {
-      let startIndex = articles.count - newArticles.count
-      let endIndex = startIndex + newArticles.count
-      return (startIndex..<endIndex).map { IndexPath(row: $0, section: 0) }
+        let startIndex = articles.count - newArticles.count
+        let endIndex = startIndex + newArticles.count
+        return (startIndex..<endIndex).map { IndexPath(row: $0, section: 0) }
     }
     
     
-    // Download the Attachment Data for the articles of a given Page
-    private func downloadImage(withUrls urls: [String?], success: @escaping (([Data?]) -> Void), failure: @escaping ((Error?) -> Void)) {
+    /// This function is used to download the images associated with the current page
+    ///
+    /// - Parameters:
+    ///   - urls: The image urls for the current page
+    ///   - success: Success Block
+    ///   - failure: Failure Block
+    private func downloadImage(withUrls urls: [String?], success: @escaping (([Data?]) -> Void),
+                               failure: @escaping ((Error?) -> Void)) {
         
+        /// Dispatch group is used to perform concurrent fetch of all the image Data for a given Page
         let group = DispatchGroup()
+        
         var imageDataArray = [Data?].init(repeating: nil, count: urls.count)
+        
         for index in 0..<urls.count {
             
             guard let url = urls[index] else {
                 continue
             }
             
+            /// Entering the Group
             group.enter()
-            let dispatcher = NetworkDispatcher(environment: Environment(Env.debug.rawValue, host: url))
-            let attachmentDownloadTask = DownloadAttachmentDataTask(path: "")
             
+            let dispatcher = NetworkDispatcher(environment: Environment(Env.debug.rawValue, host: url))
+            let attachmentDownloadTask = DownloadAttachmentDataTask(path: StringConstants.empty)
             attachmentDownloadTask.execute(in: dispatcher) { (data) in
+                
+                if let data = data as? Data {
+                    imageDataArray[index] = data
                     
-                    if let data = data as? Data {
-                        // TODO: - mapping image with article
-                        imageDataArray[index] = data
-                        self.saveToFileSystem(withFileName: String(url.hash), fileData: data)
-                        group.leave()
-                    }
+                    /// Saving the fetched image to fileSystem, FileName is the Hash of the Url, We can use other hashing to set the filename uniquely
+                    self.saveToFileSystem(withFileName: String(url.hash), fileData: data)
+                    
+                    /// Leaving the group after download is successful
+                    group.leave()
+                }
                 
             } failure: { (error) in
                 NSLog("Could not download the image for \(String(describing: index))")
+                
+                /// Leaving the group if the download fails
                 group.leave()
             }
         }
         
         group.notify(queue: .main) {
+            /// returning the image data array after the downloads are complete
             success(imageDataArray)
         }
     }
     
-    // Save the downloaded image to file System
+    /// This function is used to save the data with the fileName into FileSystem
+    ///
+    /// - Parameters:
+    ///   - name: File name
+    ///   - fileData: file Data
     private func saveToFileSystem(withFileName name: String, fileData: Data) {
         fileManager?.save(fileName: name, file: fileData)
     }
     
-    // Save the image details to dB
-    private func saveTodB(attachmentData data: ArticleModel) {
-        
-        let fileName = data.url!.components(separatedBy: "//")[1].components(separatedBy: "/").last!
-        
-        let effectiveDate = (data.publishedAt?.toDateWithFormat(withFormat: "yyyy-MM-dd"))!.convertToLocalTime()
-        
-        databaseManager?.save(date: effectiveDate, explanation: data.description!, filePath: fileName, title: data.title!)
-    }
-    
+    /// This function is used to create Article ID from the Article Url
+    ///
+    /// - Parameters:
+    ///   - url: Article Url
+    /// - Returns: Article ID
     private func articleId(fromUrl url: String?) -> String? {
         guard let url = url else {return nil}
-        let replacedUrl = url.replacingOccurrences(of: "/", with: "-").split(separator: ":").last
-        let articleId = replacedUrl?.components(separatedBy: "--").joined()
+        let replacedUrl = url.replacingOccurrences(of: StringConstants.forwardSlash, with: StringConstants.hyphen).split(separator: ":").last
+        let articleId = replacedUrl?.components(separatedBy: StringConstants.doubleHyphen).joined()
         return articleId
     }
 }
 
 extension ArticleListInteractor: ArticleListPresenterToInteractorProtocol {
     
+    /// This function is used to get the current Article Count
+    /// - Returns: Article Count
     func getCurrentArticleCount() -> Int? {
         return currentCount
     }
     
+    /// This function is used to get the total article count
+    /// - Returns: Article ID
     func totalArticleCount() -> Int? {
         return total
     }
     
+    /// This function is used to get the article Data at a given index
+    ///
+    /// - Parameters:
+    ///   - index: index
+    /// - Returns: Article Data
     func article(at index: Int) -> Article {
+        
         let articleData = articles[index]
         let articleID = articleId(fromUrl: articleData.url)
+        
         return Article(author: articleData.author, description: articleData.description, image: articleData.imageData, title: articleData.title, publishedDate: articleData.publishedAt, content: articleData.content, articleID: articleID)
     }
 }

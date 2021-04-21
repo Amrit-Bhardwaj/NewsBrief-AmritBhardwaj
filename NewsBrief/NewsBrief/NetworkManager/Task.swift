@@ -10,7 +10,7 @@ import Foundation
 /* This protocol describes the interface for a task object
  */
 protocol Task {
-   // associatedtype Output
+    // associatedtype Output
     
     /// Request to execute
     var request: Request { get }
@@ -19,7 +19,8 @@ protocol Task {
     /// Execute request in passed dispatcher
     ///
     /// - Parameter dispatcher: dispatcher
-    /// - Returns: a promise
+    /// - success: Success Block
+    /// - failure: Failure Block
     func execute(in dispatcher: Dispatcher, success: @escaping ((Any) -> Void), failure: @escaping ((Error?) -> Void))
     
 }

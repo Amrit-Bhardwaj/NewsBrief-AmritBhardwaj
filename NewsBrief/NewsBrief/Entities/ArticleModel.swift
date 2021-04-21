@@ -6,7 +6,9 @@
 //
 
 import Foundation
-
+/*
+ 'ArticleModel' represents the mapping model for Article response Data
+ */
 struct ArticleModel {
     
     var author: String?
@@ -19,18 +21,17 @@ struct ArticleModel {
     var imageData: Data?
     
     // TODO: - Json keys to be put in separate constant file
-    // This can be implemented using decodable
+    // This can be implemented using decodable Protocol Too
     init(jsonData: [String: AnyObject]?) {
         
         if let json = jsonData {
-            
-            author = json["author"] as? String
-            title = json["title"] as? String
-            description = json["description"] as? String
-            url = json["url"] as? String
-            urlToImage = json["urlToImage"] as? String
-            publishedAt = json["publishedAt"] as? String
-            content = json["content"] as? String
+            author = json[JSONKeys.author] as? String
+            title = json[JSONKeys.title] as? String
+            description = json[JSONKeys.description] as? String
+            url = json[JSONKeys.url] as? String
+            urlToImage = json[JSONKeys.urlToImage] as? String
+            publishedAt = json[JSONKeys.publishedAt] as? String
+            content = json[JSONKeys.content] as? String
         }
     }
 }
