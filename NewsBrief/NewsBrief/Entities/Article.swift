@@ -14,5 +14,6 @@ struct Article {
     var title: String?
     var publishedDate: String?
     var content: String?
+    var articleID: String?
 }
 

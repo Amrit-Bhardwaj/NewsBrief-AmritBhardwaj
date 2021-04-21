@@ -55,6 +55,8 @@
 		5BBF14C6262E9D8000A8F0A9 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBF14C5262E9D8000A8F0A9 /* Date+Extension.swift */; };
 		5BBF14D3262EA86000A8F0A9 /* ArticleListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBF14D1262EA86000A8F0A9 /* ArticleListTableViewCell.swift */; };
 		5BBF14D4262EA86000A8F0A9 /* ArticleListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BBF14D2262EA86000A8F0A9 /* ArticleListTableViewCell.xib */; };
+		5BCA576226304C800052DFC8 /* GetArticleMetaTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCA576126304C800052DFC8 /* GetArticleMetaTask.swift */; };
+		5BCA5767263052280052DFC8 /* ArticleMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCA5766263052280052DFC8 /* ArticleMeta.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,6 +131,8 @@
 		5BBF14C5262E9D8000A8F0A9 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		5BBF14D1262EA86000A8F0A9 /* ArticleListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListTableViewCell.swift; sourceTree = "<group>"; };
 		5BBF14D2262EA86000A8F0A9 /* ArticleListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArticleListTableViewCell.xib; sourceTree = "<group>"; };
+		5BCA576126304C800052DFC8 /* GetArticleMetaTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetArticleMetaTask.swift; sourceTree = "<group>"; };
+		5BCA5766263052280052DFC8 /* ArticleMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleMeta.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -348,6 +352,7 @@
 				5BBF147B262E98BA00A8F0A9 /* NetworkDispatcher.swift */,
 				5BBF1480262E98D400A8F0A9 /* UserRequests.swift */,
 				5BBF1485262E992000A8F0A9 /* GetArticleDetailsTask.swift */,
+				5BCA576126304C800052DFC8 /* GetArticleMetaTask.swift */,
 				5BBF148A262E997800A8F0A9 /* DownloadAttachmentDataTask.swift */,
 				5BBF148F262E999600A8F0A9 /* Task.swift */,
 			);
@@ -380,6 +385,7 @@
 			children = (
 				5BBF14C0262E9D2D00A8F0A9 /* ArticleModel.swift */,
 				5B89D494262F2F0600B0B369 /* Article.swift */,
+				5BCA5766263052280052DFC8 /* ArticleMeta.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -528,6 +534,7 @@
 				5BBF14AF262E9C1F00A8F0A9 /* String+Extension.swift in Sources */,
 				5BBF149E262E9BAE00A8F0A9 /* Constants.swift in Sources */,
 				5B7595BA262DE89700739D9F /* ViewController.swift in Sources */,
+				5BCA5767263052280052DFC8 /* ArticleMeta.swift in Sources */,
 				5BBF148B262E997800A8F0A9 /* DownloadAttachmentDataTask.swift in Sources */,
 				5B8F760F262EBAC300A467A8 /* ArticleFileManager.swift in Sources */,
 				5B7595B6262DE89700739D9F /* AppDelegate.swift in Sources */,
@@ -557,6 +564,7 @@
 				5BBF1490262E999600A8F0A9 /* Task.swift in Sources */,
 				5B54A513262FDEEA00981640 /* DetailsTableViewCell.swift in Sources */,
 				5BBF1486262E992000A8F0A9 /* GetArticleDetailsTask.swift in Sources */,
+				5BCA576226304C800052DFC8 /* GetArticleMetaTask.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

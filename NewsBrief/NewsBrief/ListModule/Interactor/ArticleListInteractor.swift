@@ -233,6 +233,13 @@ final class ArticleListInteractor {
         
         databaseManager?.save(date: effectiveDate, explanation: data.description!, filePath: fileName, title: data.title!)
     }
+    
+    private func articleId(fromUrl url: String?) -> String? {
+        guard let url = url else {return nil}
+        let replacedUrl = url.replacingOccurrences(of: "/", with: "-").split(separator: ":").last
+        let articleId = replacedUrl?.components(separatedBy: "--").joined()
+        return articleId
+    }
 }
 
 extension ArticleListInteractor: ArticleListPresenterToInteractorProtocol {
@@ -247,6 +254,7 @@ extension ArticleListInteractor: ArticleListPresenterToInteractorProtocol {
     
     func article(at index: Int) -> Article {
         let articleData = articles[index]
-        return Article(author: articleData.author, description: articleData.description, image: articleData.imageData, title: articleData.title, publishedDate: articleData.publishedAt, content: articleData.content)
+        let articleID = articleId(fromUrl: articleData.url)
+        return Article(author: articleData.author, description: articleData.description, image: articleData.imageData, title: articleData.title, publishedDate: articleData.publishedAt, content: articleData.content, articleID: articleID)
     }
 }

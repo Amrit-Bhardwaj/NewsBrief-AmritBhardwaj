@@ -16,6 +16,7 @@ protocol ArticleDetailsViewToPresenterProtocol: class {
     var router: ArticleDetailsPresenterToRouterProtocol? {get set}
     var article: Article? { get set }
     func getArticleDetails() -> Article?
+    func getArticleMetaDetails(forArticleId id: String?)
 //    func startFetchingArticleDetails()
 //    func showArticleDetailController(navigationController: UINavigationController)
 //    func getTotalArticleCount() -> Int?
@@ -24,6 +25,8 @@ protocol ArticleDetailsViewToPresenterProtocol: class {
 }
 
 protocol ArticleDetailsPresenterToViewProtocol: class {
+    
+    func metaDetails(withMetaData metaData: ArticleMeta)
 //    func showArticleList(imageData: Data, title: String, explanation: String)
 //    func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?)
 //    func showError()
@@ -35,9 +38,10 @@ protocol ArticleDetailsPresenterToRouterProtocol: class {
 
 protocol ArticleDetailsPresenterToInteractorProtocol: class {
     var presenter: ArticleDetailsInteractorToPresenterProtocol? {get set}
+    
 //    var databaseManager: DatabaseManagerProtocol? {get set}
 //    var fileManager: FileManagerProtocol? {get set}
-//    func fetchArticleDetails()
+    func fetchArticleMetaDetails(forArticleID id: String?)
 //    func totalArticleCount() -> Int?
 //    func getCurrentArticleCount() -> Int?
 //    func article(at index: Int) -> Article
@@ -45,6 +49,7 @@ protocol ArticleDetailsPresenterToInteractorProtocol: class {
 
 protocol ArticleDetailsInteractorToPresenterProtocol: class {
     
+    func metaFetchSuccess(withMetaData metaData: ArticleMeta)
 //    func imageFetchedSuccess(imageData: Data, title: String, explanation: String)
 //    func imageFetchFailed()
 //    func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?)

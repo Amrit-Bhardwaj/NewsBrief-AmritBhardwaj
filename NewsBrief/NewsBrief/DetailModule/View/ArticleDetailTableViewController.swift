@@ -11,19 +11,14 @@ final class ArticleDetailTableViewController: UITableViewController {
         
     var presenter: ArticleDetailsViewToPresenterProtocol?
     private var articleData: Article?
+    private var articleMetaData: ArticleMeta?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        LoadingIndicator.sharedInstance.showOnWindow()
         articleData = presenter?.getArticleDetails()
-        //LoadingIndicator.sharedInstance.showOnWindow()
-        //presenter?.startFetchingArticleDetails()
+        presenter?.getArticleMetaDetails(forArticleId: articleData?.articleID)
         setUp()
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
     private func setUp() {
@@ -73,7 +68,7 @@ extension ArticleDetailTableViewController {
             }
         case 2:
             if let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: DetailsTableViewCell.self), for: indexPath) as? DetailsTableViewCell {
-                cell.configure(author: articleData?.author ?? "Author not found", publishedDate: articleData?.publishedDate ?? "Today's Date", numberOfLikes: "32", numberOfComments: "45")
+                cell.configure(author: articleData?.author ?? "Author not found", publishedDate: articleData?.publishedDate ?? "Today's Date", numberOfLikes: articleMetaData?.likes ?? "0", numberOfComments: articleMetaData?.comments ?? "0")
                 return cell
             }
         case 3:
@@ -91,5 +86,9 @@ extension ArticleDetailTableViewController {
 }
 
 extension ArticleDetailTableViewController: ArticleDetailsPresenterToViewProtocol {
-    
+    func metaDetails(withMetaData metaData: ArticleMeta) {
+        self.articleMetaData = metaData
+        tableView.reloadData()
+        LoadingIndicator.sharedInstance.hide()
+    }
 }

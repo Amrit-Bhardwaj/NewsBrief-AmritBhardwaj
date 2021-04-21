@@ -9,6 +9,7 @@ import UIKit
 
 final class ArticleDetailsPresenter: ArticleDetailsViewToPresenterProtocol {
     
+    
     var view: ArticleDetailsPresenterToViewProtocol?
     
     var interactor: ArticleDetailsPresenterToInteractorProtocol?
@@ -24,9 +25,18 @@ final class ArticleDetailsPresenter: ArticleDetailsViewToPresenterProtocol {
     func showArticleDetailController(navigationController: UINavigationController) {
         
     }
+    
+    func getArticleMetaDetails(forArticleId id: String?) {
+        interactor?.fetchArticleMetaDetails(forArticleID: id)
+    }
 }
 
 extension ArticleDetailsPresenter: ArticleDetailsInteractorToPresenterProtocol {
+    
+    func metaFetchSuccess(withMetaData metaData: ArticleMeta) {
+        view?.metaDetails(withMetaData: metaData)
+    }
+    
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
        // view?.onFetchCompleted(with: newIndexPathsToReload)
     }
