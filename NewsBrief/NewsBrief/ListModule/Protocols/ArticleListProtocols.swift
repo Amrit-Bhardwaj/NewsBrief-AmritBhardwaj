@@ -9,11 +9,11 @@ import UIKit
 
 // This file consists of all the protocols used throughout the Article List Module
 // Passing simple native data type as params for communication between layers to avoid dependency
-protocol ViewToPresenterProtocol: class {
+protocol ArticleListViewToPresenterProtocol: class {
     
-    var view: PresenterToViewProtocol? {get set}
-    var interactor: PresenterToInteractorProtocol? {get set}
-    var router: PresenterToRouterProtocol? {get set}
+    var view: ArticleListPresenterToViewProtocol? {get set}
+    var interactor: ArticleListPresenterToInteractorProtocol? {get set}
+    var router: ArticleListPresenterToRouterProtocol? {get set}
     func startFetchingArticleDetails()
     func showArticleListController(navigationController: UINavigationController)
     func getTotalArticleCount() -> Int?
@@ -21,18 +21,18 @@ protocol ViewToPresenterProtocol: class {
     func getArticle(at index: Int) -> Article
 }
 
-protocol PresenterToViewProtocol: class{
+protocol ArticleListPresenterToViewProtocol: class{
     func showArticleList(imageData: Data, title: String, explanation: String)
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?)
     func showError()
 }
 
-protocol PresenterToRouterProtocol: class {
+protocol ArticleListPresenterToRouterProtocol: class {
     static func createModule()-> ArticleListTableViewController
 }
 
-protocol PresenterToInteractorProtocol: class {
-    var presenter: InteractorToPresenterProtocol? {get set}
+protocol ArticleListPresenterToInteractorProtocol: class {
+    var presenter: ArticleListInteractorToPresenterProtocol? {get set}
     var databaseManager: DatabaseManagerProtocol? {get set}
     var fileManager: FileManagerProtocol? {get set}
     func fetchArticleDetails()
@@ -41,7 +41,7 @@ protocol PresenterToInteractorProtocol: class {
     func article(at index: Int) -> Article
 }
 
-protocol InteractorToPresenterProtocol: class {
+protocol ArticleListInteractorToPresenterProtocol: class {
     
     func imageFetchedSuccess(imageData: Data, title: String, explanation: String)
     func imageFetchFailed()

@@ -9,7 +9,7 @@ import UIKit
 
 final class ArticleListTableViewController: UITableViewController {
     
-    var presenter: ViewToPresenterProtocol?
+    var presenter: ArticleListViewToPresenterProtocol?
 
     // MARK: - ViewController life cycle Methods
     override func viewDidLoad() {
@@ -76,7 +76,7 @@ extension ArticleListTableViewController: UITableViewDataSourcePrefetching {
     }
 }
 
-extension ArticleListTableViewController: PresenterToViewProtocol {
+extension ArticleListTableViewController: ArticleListPresenterToViewProtocol {
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
         guard let newIndexPathsToReload = newIndexPathsToReload else {
           //indicatorView.stopAnimating()

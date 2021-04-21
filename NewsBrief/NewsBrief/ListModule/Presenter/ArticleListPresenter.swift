@@ -7,13 +7,13 @@
 
 import UIKit
 
-final class ArticleListPresenter: ViewToPresenterProtocol {
+final class ArticleListPresenter: ArticleListViewToPresenterProtocol {
     
-    var view: PresenterToViewProtocol?
+    var view: ArticleListPresenterToViewProtocol?
     
-    var interactor: PresenterToInteractorProtocol?
+    var interactor: ArticleListPresenterToInteractorProtocol?
     
-    var router: PresenterToRouterProtocol?
+    var router: ArticleListPresenterToRouterProtocol?
     
     func startFetchingArticleDetails() {
         interactor?.fetchArticleDetails()
@@ -24,7 +24,7 @@ final class ArticleListPresenter: ViewToPresenterProtocol {
     }
 }
 
-extension ArticleListPresenter: InteractorToPresenterProtocol {
+extension ArticleListPresenter: ArticleListInteractorToPresenterProtocol {
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
         view?.onFetchCompleted(with: newIndexPathsToReload)
     }

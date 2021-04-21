@@ -9,7 +9,7 @@ import UIKit
 
 final class ArticleListInteractor {
     
-    var presenter: InteractorToPresenterProtocol?
+    var presenter: ArticleListInteractorToPresenterProtocol?
     var databaseManager: DatabaseManagerProtocol?
     var fileManager: FileManagerProtocol?
     
@@ -235,7 +235,7 @@ final class ArticleListInteractor {
     }
 }
 
-extension ArticleListInteractor: PresenterToInteractorProtocol {
+extension ArticleListInteractor: ArticleListPresenterToInteractorProtocol {
     
     func getCurrentArticleCount() -> Int? {
         return currentCount

@@ -7,16 +7,16 @@
 
 import UIKit
 
-final class ArticleListRouter: PresenterToRouterProtocol {
+final class ArticleListRouter: ArticleListPresenterToRouterProtocol {
     
     static func createModule() -> ArticleListTableViewController {
         
         // This can be set using xib too
         let view = mainstoryboard.instantiateViewController(withIdentifier: "ArticleListTableViewController") as! ArticleListTableViewController
 
-        let presenter: ViewToPresenterProtocol & InteractorToPresenterProtocol = ArticleListPresenter()
-        let interactor: PresenterToInteractorProtocol = ArticleListInteractor()
-        let router:PresenterToRouterProtocol = ArticleListRouter()
+        let presenter: ArticleListViewToPresenterProtocol & ArticleListInteractorToPresenterProtocol = ArticleListPresenter()
+        let interactor: ArticleListPresenterToInteractorProtocol = ArticleListInteractor()
+        let router:ArticleListPresenterToRouterProtocol = ArticleListRouter()
 //        let databaseManager: DatabaseManagerProtocol = DatabaseManager()
         let fileManager: FileManagerProtocol = ArticleFileManager()
         
