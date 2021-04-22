@@ -9,3 +9,7 @@ This project implements News Briefing Application(https://newsapi.org) using VIP
 # Instructions to run the App
 1. Open Project Work Space file on Xcode
 2. Select the Target Device and Press Run(CMD+R)
+
+# Screen View File Names
+1. NewsArticleDetailView (iPad + iPhone)
+2. NewsArticleListView (iPad + iPhone)
