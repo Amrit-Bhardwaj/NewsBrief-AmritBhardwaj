@@ -8,19 +8,37 @@
 import XCTest
 @testable import NewsBrief
 
-class NewsBriefTests: XCTestCase {
-
+class NewsBriefArticleDetailPresenterTests: XCTestCase {
+    
+    var presenter: ArticleDetailsPresenter!
+    var view = ArticleDetailsMockView()
+    var interactor = ArticleDetailsIntereactorMock()
+    
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        presenter = ArticleDetailsPresenter()
+        presenter.view = view
+        presenter.interactor = interactor
+        interactor.presenter = presenter
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        presenter = nil
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testFetchArticleMetaData() throws {
+        presenter.getArticleMetaDetails(forArticleId: "ArticleID")
+        
+        if let likes = view.articleMeta?.likes {
+            XCTAssert(likes != "-1")
+        } else {
+            XCTFail("Could not fetch Article Likes count")
+        }
+        
+        if let comments = view.articleMeta?.comments {
+            XCTAssert(comments != "-1")
+        } else {
+            XCTFail("Could not fetch Article Comments count")
+        }
     }
 
     func testPerformanceExample() throws {
@@ -30,4 +48,25 @@ class NewsBriefTests: XCTestCase {
         }
     }
 
+}
+
+class ArticleDetailsMockView: ArticleDetailsPresenterToViewProtocol {
+    
+    var articleMeta: ArticleMeta?
+    
+    func metaDetails(withMetaData metaData: ArticleMeta) {
+        self.articleMeta = metaData
+    }
+}
+
+class ArticleDetailsIntereactorMock: ArticleDetailsPresenterToInteractorProtocol {
+    
+    // TDOD: - Create a Network Dispatcher Mock Object to fetch the Article meta Data
+    
+    var presenter: ArticleDetailsInteractorToPresenterProtocol?
+    
+    func fetchArticleMetaDetails(forArticleID id: String?) {
+        let articleMeta = ArticleMeta(likes: "10", comments: "10")
+        presenter?.metaFetchSuccess(withMetaData: articleMeta)
+    }
 }

@@ -51,6 +51,16 @@ final class ArticleDetailsPresenter: ArticleDetailsViewToPresenterProtocol {
     func getArticleMetaDetails(forArticleId id: String?) {
         interactor?.fetchArticleMetaDetails(forArticleID: id)
     }
+    
+    /// This function returns the number of sections on the view
+    func numberOfSections() -> Int {
+        return ArticleSections.allCases.count
+    }
+    
+    /// This function returns the number of rows in
+    func numberOfRowsInSection(section: Int) -> Int {
+        return ArticleRows.allCases.count
+    }
 }
 
 extension ArticleDetailsPresenter: ArticleDetailsInteractorToPresenterProtocol {
@@ -61,16 +71,6 @@ extension ArticleDetailsPresenter: ArticleDetailsInteractorToPresenterProtocol {
     ///   - metaData: Article Meta Data
     func metaFetchSuccess(withMetaData metaData: ArticleMeta) {
         view?.metaDetails(withMetaData: metaData)
-    }
-    
-    /// This function returns the number of sections on the view
-    func numberOfSections() -> Int {
-        return ArticleSections.allCases.count
-    }
-    
-    /// This function returns the number of rows in
-    func numberOfRowsInSection(section: Int) -> Int {
-        return ArticleRows.allCases.count
     }
 }
 
