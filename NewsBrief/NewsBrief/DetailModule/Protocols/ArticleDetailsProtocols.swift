@@ -7,8 +7,10 @@
 
 import Foundation
 
-// This file consists of all the protocols used throughout the Article List Module
-// Passing simple native data type as params for communication between layers to avoid dependency
+/// This file consists of all the protocols used throughout the Article Details Module
+/// Passing simple native data type as params for communication between layers to avoid dependency
+
+/// This Protocol contains the APIs to communicate from VIEW --> PRESENTER
 protocol ArticleDetailsViewToPresenterProtocol: class {
     
     var view: ArticleDetailsPresenterToViewProtocol? {get set}
@@ -17,55 +19,31 @@ protocol ArticleDetailsViewToPresenterProtocol: class {
     var article: Article? { get set }
     func getArticleDetails() -> Article?
     func getArticleMetaDetails(forArticleId id: String?)
-//    func startFetchingArticleDetails()
-//    func showArticleDetailController(navigationController: UINavigationController)
-//    func getTotalArticleCount() -> Int?
-//    func getCurrentArticleCount() -> Int?
-//    func getArticle(at index: Int) -> Article
+    func numberOfSections() -> Int
+    func numberOfRowsInSection(section: Int) -> Int
 }
 
+/// This Protocol contains the APIs to communicate from PRESENTER --> VIEW
 protocol ArticleDetailsPresenterToViewProtocol: class {
     
     func metaDetails(withMetaData metaData: ArticleMeta)
-//    func showArticleList(imageData: Data, title: String, explanation: String)
-//    func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?)
-//    func showError()
 }
 
+/// This Protocol contains the APIs to communicate from PRESENTER --> ROUTER
 protocol ArticleDetailsPresenterToRouterProtocol: class {
+    
     static func createModule(forArticle article: Article) -> ArticleDetailTableViewController
 }
 
+/// This Protocol contains the APIs to communicate from PRESENTER --> INTERACTOR
 protocol ArticleDetailsPresenterToInteractorProtocol: class {
-    var presenter: ArticleDetailsInteractorToPresenterProtocol? {get set}
     
-//    var databaseManager: DatabaseManagerProtocol? {get set}
-//    var fileManager: FileManagerProtocol? {get set}
+    var presenter: ArticleDetailsInteractorToPresenterProtocol? {get set}
     func fetchArticleMetaDetails(forArticleID id: String?)
-//    func totalArticleCount() -> Int?
-//    func getCurrentArticleCount() -> Int?
-//    func article(at index: Int) -> Article
 }
 
+/// This Protocol contains the APIs to communicate from INTERACTOR --> PRESENTER
 protocol ArticleDetailsInteractorToPresenterProtocol: class {
     
     func metaFetchSuccess(withMetaData metaData: ArticleMeta)
-//    func imageFetchedSuccess(imageData: Data, title: String, explanation: String)
-//    func imageFetchFailed()
-//    func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?)
-    
 }
-
-//protocol DatabaseManagerProtocol: class {
-//
-//    // typeAlias: Date, title, Explanation, Image file path
-//    func fetch() -> (Date?, String?, String?, String?)
-//    func save(date: Date, explanation: String, filePath: String, title: String)
-//    func update()
-//}
-//
-//protocol FileManagerProtocol: class {
-//    func save(fileName: String, file: Data)
-//    func openFile(fileName: String) -> Data?
-//}
-

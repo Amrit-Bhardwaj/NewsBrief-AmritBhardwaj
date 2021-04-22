@@ -1,0 +1,21 @@
+/* 
+  Localizable.strings
+  NewsBrief
+
+  Created by Amrit Bhardwaj on 22/04/21.
+  
+*/
+
+// MARK: - Generic
+
+"generic.ok" = "Ok";
+
+/********************************************* Article List Screen ***********************************************/
+
+// MARK: - Article List Screen
+// TDOD: - Article List screen strings here
+
+/********************************************* Article Details Screen ***********************************************/
+
+// MARK: - Article Details Screen
+//TODOD: - Article Details Screen strings here

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B15D3072631547200A742CB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5B15D3062631547200A742CB /* Localizable.strings */; };
 		5B54A4F6262FD95C00981640 /* ArticleDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B54A4F4262FD95C00981640 /* ArticleDetailTableViewController.swift */; };
 		5B54A4F7262FD95C00981640 /* ArticleDetailTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B54A4F5262FD95C00981640 /* ArticleDetailTableViewController.xib */; };
 		5B54A505262FDA1100981640 /* TitleSubTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B54A503262FDA1100981640 /* TitleSubTitleTableViewCell.swift */; };
@@ -79,6 +80,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5B15D3062631547200A742CB /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = NewsBrief/DetailModule/View/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		5B54A4F4262FD95C00981640 /* ArticleDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailTableViewController.swift; sourceTree = "<group>"; };
 		5B54A4F5262FD95C00981640 /* ArticleDetailTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArticleDetailTableViewController.xib; sourceTree = "<group>"; };
 		5B54A503262FDA1100981640 /* TitleSubTitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSubTitleTableViewCell.swift; sourceTree = "<group>"; };
@@ -375,6 +377,7 @@
 		5BBF14A5262E9BD900A8F0A9 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				5B15D3062631547200A742CB /* Localizable.strings */,
 				5BBF149D262E9BAE00A8F0A9 /* Constants.swift */,
 				5BBF14A9262E9C0000A8F0A9 /* UIViewController+Extensions.swift */,
 				5BBF14AE262E9C1F00A8F0A9 /* String+Extension.swift */,
@@ -512,6 +515,7 @@
 				5B54A514262FDEEA00981640 /* DetailsTableViewCell.xib in Resources */,
 				5BBF14D4262EA86000A8F0A9 /* ArticleListTableViewCell.xib in Resources */,
 				5B7595C5262DE89A00739D9F /* LaunchScreen.storyboard in Resources */,
+				5B15D3072631547200A742CB /* Localizable.strings in Resources */,
 				5B7595C2262DE89A00739D9F /* Assets.xcassets in Resources */,
 				5B54A506262FDA1100981640 /* TitleSubTitleTableViewCell.xib in Resources */,
 				5B7595BD262DE89700739D9F /* Main.storyboard in Resources */,

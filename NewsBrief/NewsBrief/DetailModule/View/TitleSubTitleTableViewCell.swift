@@ -7,25 +7,23 @@
 
 import UIKit
 
+/*
+ 'TitleSubTitleTableViewCell' implements and configurs the Title Description section of Article
+ */
 final class TitleSubTitleTableViewCell: UITableViewCell {
     
-    @IBOutlet private weak var titleLabel: UILabel!
+    // MARK: - IBOutlets
     
+    @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var subTitleLabel: UILabel!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
+    /// This function is used to configure the 'TitleSubTitleTableViewCell' cell
+    ///
+    /// - Parameters:
+    ///   - title: Title
+    ///   - subTitle: Sub title
     func configure(title: String, subTitle: String) {
         titleLabel.text = title
         subTitleLabel.text = subTitle
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-    
 }

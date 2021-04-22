@@ -7,22 +7,19 @@
 
 import UIKit
 
+/*
+ 'ImageTableViewCell' implements and configurs the Image section of Article
+ */
 final class ImageTableViewCell: UITableViewCell {
     
+    // MARK: - IBOutlets
     @IBOutlet private weak var detailImageView: UIImageView!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
+    /// This function is used to configure 'ImageTableViewCell' cell
+    ///
+    /// - Parameters:
+    ///   - image: Article Image
     func configure(image: UIImage?) {
         detailImageView.image = image
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-    
 }

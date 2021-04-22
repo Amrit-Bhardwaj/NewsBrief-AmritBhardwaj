@@ -7,23 +7,19 @@
 
 import UIKit
 
+/*
+ 'TextTableViewCell' implements and configurs the Article content section of Article Detail View
+ */
 final class TextTableViewCell: UITableViewCell {
     
-    
+    // MARK: - IBOutlets
     @IBOutlet private weak var detailTextView: UITextView!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
+    /// This function is used to configure 'TextTableViewCell' cell
+    ///
+    /// - Parameters:
+    ///   - text: Aritcle content
     func configure(withText text: String) {
         detailTextView.text = text
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-    
 }

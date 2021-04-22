@@ -70,7 +70,7 @@ final class LoadingIndicator: UIView {
                            options: [.curveEaseIn],
                            animations: { () -> Void in
                             strongSelf.alpha = 1.0
-            })
+                           })
         }
     }
     
@@ -96,7 +96,7 @@ final class LoadingIndicator: UIView {
                            options: [.curveEaseIn],
                            animations: { () -> Void in
                             strongSelf.alpha = 0.5
-            })
+                           })
         }
     }
     
@@ -118,7 +118,7 @@ final class LoadingIndicator: UIView {
                            options: [.curveEaseIn],
                            animations: { () -> Void in
                             strongSelf.alpha = 1.0
-            })
+                           })
         }
     }
     
@@ -136,7 +136,7 @@ final class LoadingIndicator: UIView {
                            animations: { () -> Void in
                             strongSelf.alpha = 0.0
                             strongSelf.removeFromSuperview()
-            })
+                           })
         }
     }
 }

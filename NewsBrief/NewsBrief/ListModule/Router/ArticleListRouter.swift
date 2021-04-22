@@ -12,6 +12,7 @@ import UIKit
  */
 final class ArticleListRouter: ArticleListPresenterToRouterProtocol {
     
+    /// This function is used to create the Article List Module
     static func createModule() -> ArticleListTableViewController {
         
         //TODO: - This can be set using xib too

@@ -7,50 +7,80 @@
 
 import Foundation
 
+/*
+ 'ArticleDetailsIntereactor' handles the business logic for Article Details View
+ */
 final class ArticleDetailsIntereactor {
     
+    /// Article Details Presenter Instance
     var presenter: ArticleDetailsInteractorToPresenterProtocol?
+    
+    /// Article number of likes
     private var likesCount: String?
+    
+    /// Article number of comments
     private var commentsCount: String?
     
-    // TODO: - Fetch the Number of likes and comments for the article
+    /// This function is used to perform fetching of Meta(Likes+Comments) for an article ID
+    ///
+    /// - Parameters:
+    ///   - articleID: Article ID
     private func performFetch(withArticleID articleID: String?) {
         
         guard let articleID = articleID else {return}
         
+        /// List of Article Meta to fetch
         let metaArray = [ArticleMetaPath.likes, ArticleMetaPath.comments]
+        
+        /// Dispatch group used to perform concurrent fetch
         let group = DispatchGroup()
         
         for meta in metaArray {
-            group.enter()
-            let path = meta.rawValue + "/" + articleID
             
+            /// Entering the group
+            group.enter()
+            
+            /// Mata path
+            let path = meta.rawValue + StringConstants.forwardSlash + articleID
+            
+            /// Article Meta Task
             let articleMetaTask = GetArticleMetaTask(path: path)
             
-            
+            /// Network Dispatcher Instance
             let dispatcher = NetworkDispatcher(environment: Environment(Env.debug.rawValue, host: AppConstants.openUrl))
             
+            /// Executing the Article meta task
             articleMetaTask.execute(in: dispatcher) { [weak self] (json) in
                 
                 switch meta {
+                
                 case .comments:
-                    if let comments = (json as? [String: AnyObject])!["comments"] as? Int {
+                    
+                    if let json = json as? [String: AnyObject],
+                       let comments = json[JSONKeys.comments] as? Int {
                         self?.commentsCount = String(comments)
                     }
+                    
                 case .likes:
-                    if let likes = (json as? [String: AnyObject])!["likes"] as? Int {
+                    
+                    if let json = json as? [String: AnyObject],
+                       let likes = json[JSONKeys.likes] as? Int {
                         self?.likesCount = String(likes)
                     }
                 }
+                
+                /// Leaving the group on success
                 group.leave()
                 
             } failure: { (error) in
-                // error
+                
+                /// Leaving the group on failure
                 group.leave()
             }
         }
         
         group.notify(queue: .main) {
+            /// Notify the presenter after Meta is successfully fetched
             let articleMeta = ArticleMeta(likes: self.likesCount, comments: self.commentsCount)
             self.presenter?.metaFetchSuccess(withMetaData: articleMeta)
         }
@@ -59,6 +89,10 @@ final class ArticleDetailsIntereactor {
 
 extension ArticleDetailsIntereactor: ArticleDetailsPresenterToInteractorProtocol {
     
+    /// This function is used to fetch article Meta Details for a given article ID
+    ///
+    /// - Parameters:
+    ///   - forArticleID: Article ID
     func fetchArticleMetaDetails(forArticleID id: String?) {
         performFetch(withArticleID: id)
     }

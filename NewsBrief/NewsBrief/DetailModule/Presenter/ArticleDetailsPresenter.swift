@@ -7,25 +7,47 @@
 
 import UIKit
 
+/// This enum defines the number of sections in the Article Detail View
+enum ArticleSections: Int, CaseIterable {
+    case articleDetail
+}
+
+/// This enum defines the number of rows for Article Detail View
+enum ArticleRows: Int, CaseIterable {
+    case titleDescription
+    case articleImage
+    case articleMeta
+    case articleContent
+}
+
+/*
+ 'ArticleDetailsPresenter' class handles data flow to and from Article Details View
+ */
 final class ArticleDetailsPresenter: ArticleDetailsViewToPresenterProtocol {
     
-    
+    /// View Instance
     var view: ArticleDetailsPresenterToViewProtocol?
     
+    /// Interactor Instance
     var interactor: ArticleDetailsPresenterToInteractorProtocol?
     
+    /// Router Instance
     var router: ArticleDetailsPresenterToRouterProtocol?
     
+    /// Article Data used to display Article Detail View
     var article: Article?
     
+    /// This function returns the article Data for the Article Detail View
+    ///
+    /// - Returns: Article
     func getArticleDetails() -> Article? {
         return article
     }
     
-    func showArticleDetailController(navigationController: UINavigationController) {
-        
-    }
-    
+    /// This function is used to get Article Meta(Likes, Comments) details
+    ///
+    /// - Parameters:
+    ///   - id: Article ID
     func getArticleMetaDetails(forArticleId id: String?) {
         interactor?.fetchArticleMetaDetails(forArticleID: id)
     }
@@ -33,33 +55,22 @@ final class ArticleDetailsPresenter: ArticleDetailsViewToPresenterProtocol {
 
 extension ArticleDetailsPresenter: ArticleDetailsInteractorToPresenterProtocol {
     
+    /// This function is used to send meta Details(Likes, comments) to the view
+    ///
+    /// - Parameters:
+    ///   - metaData: Article Meta Data
     func metaFetchSuccess(withMetaData metaData: ArticleMeta) {
         view?.metaDetails(withMetaData: metaData)
     }
     
-    func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
-       // view?.onFetchCompleted(with: newIndexPathsToReload)
+    /// This function returns the number of sections on the view
+    func numberOfSections() -> Int {
+        return ArticleSections.allCases.count
     }
     
-    
-    func imageFetchedSuccess(imageData: Data, title: String, explanation: String) {
-        //view?.showArticleList(imageData: imageData, title: title, explanation: explanation)
+    /// This function returns the number of rows in
+    func numberOfRowsInSection(section: Int) -> Int {
+        return ArticleRows.allCases.count
     }
-    
-    func imageFetchFailed() {
-        //view?.showError()
-    }
-    
-//    func getTotalArticleCount() -> Int? {
-//        //return interactor?.totalArticleCount()
-//    }
-//
-//    func getCurrentArticleCount() -> Int? {
-//        //return interactor?.getCurrentArticleCount()
-//    }
-//
-//    func getArticle(at index: Int) -> Article {
-//        //return interactor?.article(at: index) ?? Article()
-//    }
 }
 

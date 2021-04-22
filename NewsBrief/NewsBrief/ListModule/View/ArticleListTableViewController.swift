@@ -69,7 +69,7 @@ extension ArticleListTableViewController {
             } else {
                 
                 let article = presenter?.getArticle(at: indexPath.row)
-                let articleImage = UIImage(data: (article?.image) ?? Data()) ?? UIImage(named: "dummy")
+                let articleImage = UIImage(data: (article?.image) ?? Data()) ?? Image.placeHolderImage
                 
                 /// Configuring the cell
                 cell.configure(image: articleImage, description: article?.description ?? "Description not available", author: article?.author ?? "Author Details not Available")
