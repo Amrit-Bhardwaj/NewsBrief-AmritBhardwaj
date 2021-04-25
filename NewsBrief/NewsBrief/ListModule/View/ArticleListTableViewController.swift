@@ -118,19 +118,30 @@ extension ArticleListTableViewController: ArticleListPresenterToViewProtocol {
         LoadingIndicator.sharedInstance.hide()
     }
     
-    func showError() {
-        tableView.separatorStyle = .singleLine
-        LoadingIndicator.sharedInstance.hide()
-        let errorActionHandler: ((UIAlertAction) -> Void) = {[weak self] (action) in
-            self?.tableView.reloadData()
-        }
+    /// Showing error message if Article fetch failed
+    func showError(withError error: ErrorMessages) {
         
-        //TODO: - The strings should be added to localizable string file
-        showAlert(title: "Alert",
-                  message: "We are not connected to the internet, showing you the last news Articles we have.",
-                  style: [.default],
-                  actions: [(title: "Ok",
-                             event: errorActionHandler)])
+        DispatchQueue.main.async { [weak self] in
+            LoadingIndicator.sharedInstance.hide()
+            self?.tableView.separatorStyle = .singleLine
+            
+            switch error {
+            case .noInternet:
+                self?.showAlert(title: "Alert",
+                                message: "Please connect to the internet and try again",
+                                style: [.default],
+                                actions: [(title: "Okay",
+                                           event: nil)])
+            case .noArticlesFound:
+                self?.showAlert(title: "Alert",
+                                message: "We could not fetch any Articles",
+                                style: [.default],
+                                actions: [(title: "Okay",
+                                           event: nil)])
+            default:
+                break
+            }
+        }
     }
 }
 

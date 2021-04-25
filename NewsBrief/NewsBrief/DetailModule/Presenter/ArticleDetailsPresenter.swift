@@ -72,5 +72,13 @@ extension ArticleDetailsPresenter: ArticleDetailsInteractorToPresenterProtocol {
     func metaFetchSuccess(withMetaData metaData: ArticleMeta) {
         view?.metaDetails(withMetaData: metaData)
     }
+    
+    /// This function is used to send error messages to view
+    ///
+    /// - Parameters:
+    ///   - error: Error Message
+    func metaFetchFailed(withError error: ErrorMessages) {
+        view?.showMetaError(withError: error)
+    }
 }
 

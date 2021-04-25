@@ -37,8 +37,8 @@ extension ArticleListPresenter: ArticleListInteractorToPresenterProtocol {
     }
     
     /// This function is used to update the UI if Article List Data fetch fails
-    func onFetchFailed() {
-        view?.showError()
+    func onFetchFailed(withError error: ErrorMessages) {
+        view?.showError(withError: error)
     }
     
     /// This function is used to get the total article Count

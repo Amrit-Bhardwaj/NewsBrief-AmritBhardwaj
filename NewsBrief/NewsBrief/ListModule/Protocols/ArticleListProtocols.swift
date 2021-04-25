@@ -27,7 +27,7 @@ protocol ArticleListViewToPresenterProtocol: class {
 protocol ArticleListPresenterToViewProtocol: class {
     
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?)
-    func showError()
+    func showError(withError error: ErrorMessages)
 }
 
 /// This Protocol contains the APIs to communicate from PRESENTER --> ROUTER
@@ -52,7 +52,7 @@ protocol ArticleListPresenterToInteractorProtocol: class {
 /// This Protocol contains the APIs to communicate from INTERACTOR --> PRESENTER
 protocol ArticleListInteractorToPresenterProtocol: class {
     
-    func onFetchFailed()
+    func onFetchFailed(withError error: ErrorMessages)
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?)
 }
 

@@ -130,4 +130,24 @@ extension ArticleDetailTableViewController: ArticleDetailsPresenterToViewProtoco
         tableView.reloadData()
         LoadingIndicator.sharedInstance.hide()
     }
+    
+    /// This function is used to present an alert if failed to fetch Meta
+    ///
+    /// - Parameters:
+    ///   - error: Error message
+    func showMetaError(withError error: ErrorMessages) {
+        
+        switch error {
+        case .noInternet:
+            showNoInterNetAvailabilityMessage()
+        default:
+            break
+        }
+    }
+    
+    /// This function shows connectivity error Alert
+    func showNoInterNetAvailabilityMessage() {
+        LoadingIndicator.sharedInstance.hide()
+        showAlert(title: "No Internet", message: "Could not fetch Article Meta Data. Please Check you internet connection and try again", style: [UIAlertAction.Style.default], actions: [(title: "Okay", event: nil)])
+    }
 }

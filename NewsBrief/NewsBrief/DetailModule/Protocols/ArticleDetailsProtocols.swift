@@ -27,6 +27,7 @@ protocol ArticleDetailsViewToPresenterProtocol: class {
 protocol ArticleDetailsPresenterToViewProtocol: class {
     
     func metaDetails(withMetaData metaData: ArticleMeta)
+    func showMetaError(withError error: ErrorMessages)
 }
 
 /// This Protocol contains the APIs to communicate from PRESENTER --> ROUTER
@@ -46,4 +47,5 @@ protocol ArticleDetailsPresenterToInteractorProtocol: class {
 protocol ArticleDetailsInteractorToPresenterProtocol: class {
     
     func metaFetchSuccess(withMetaData metaData: ArticleMeta)
+    func metaFetchFailed(withError error: ErrorMessages)
 }

@@ -94,6 +94,10 @@ extension ArticleDetailsIntereactor: ArticleDetailsPresenterToInteractorProtocol
     /// - Parameters:
     ///   - forArticleID: Article ID
     func fetchArticleMetaDetails(forArticleID id: String?) {
-        performFetch(withArticleID: id)
+        if NetworkReachabilityManager.shared.connectedToNetwork() {
+            performFetch(withArticleID: id)
+        } else {
+            presenter?.metaFetchFailed(withError: ErrorMessages.noInternet)
+        }
     }
 }

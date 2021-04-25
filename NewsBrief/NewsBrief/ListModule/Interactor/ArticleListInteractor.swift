@@ -49,7 +49,11 @@ final class ArticleListInteractor {
     
     /// This function is used to fetch the Article Details from remote
     func fetchArticleDetails() {
-        performFetch()
+        if NetworkReachabilityManager.shared.connectedToNetwork() {
+            performFetch()
+        } else {
+            self.presenter?.onFetchFailed(withError: .noInternet)
+        }
     }
     
     /// This function is used to perform fetch task
@@ -119,14 +123,14 @@ final class ArticleListInteractor {
                         }
                         
                     } failure: { (error) in
-                        self?.presenter?.onFetchFailed()
+                        self?.presenter?.onFetchFailed(withError: .noArticlesFound)
                     }
                 }
             }
             
         } failure: { [weak self] (error) in
             self?.isFetchInProgress = false
-            self?.presenter?.onFetchFailed()
+            self?.presenter?.onFetchFailed(withError: .noArticlesFound)
         }
     }
     
