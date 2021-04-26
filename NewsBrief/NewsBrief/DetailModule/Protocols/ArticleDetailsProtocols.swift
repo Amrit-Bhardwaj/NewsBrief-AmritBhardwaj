@@ -40,6 +40,7 @@ protocol ArticleDetailsPresenterToRouterProtocol: class {
 protocol ArticleDetailsPresenterToInteractorProtocol: class {
     
     var presenter: ArticleDetailsInteractorToPresenterProtocol? {get set}
+    var remoteDataManager: ArticleDetailsRemoteInputProtocol? {get set}
     func fetchArticleMetaDetails(forArticleID id: String?)
 }
 
@@ -48,4 +49,19 @@ protocol ArticleDetailsInteractorToPresenterProtocol: class {
     
     func metaFetchSuccess(withMetaData metaData: ArticleMeta)
     func metaFetchFailed(withError error: ErrorMessages)
+}
+
+/// This Protocol contains the APIs to communicate from INTERACTOR -> REMOTECLIENT
+protocol ArticleDetailsRemoteInputProtocol: class {
+    
+    var remoteRequestHandler: ArticleDetailsRemoteOutputProtocol? { get set }
+    
+    func retrieveArticleMeta(forArticleId id: String?)
+}
+
+/// This Protocol contains the APIs to communicate from REMOTECLIENT -> INTERACTOR
+protocol ArticleDetailsRemoteOutputProtocol: class {
+
+    func onArticleMetaRetrieved(likesCount likes: String?, commentCount comment: String?)
+    func onError(withError error: ErrorMessages)
 }

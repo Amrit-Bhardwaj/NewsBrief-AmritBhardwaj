@@ -62,6 +62,8 @@ class ArticleDetailsMockView: ArticleDetailsPresenterToViewProtocol {
 
 class ArticleDetailsIntereactorMock: ArticleDetailsPresenterToInteractorProtocol {
     
+    var remoteDataManager: ArticleDetailsRemoteInputProtocol?
+    
     var presenter: ArticleDetailsInteractorToPresenterProtocol?
     func fetchArticleMetaDetails(forArticleID id: String?) {
         let articleMeta = ArticleMeta(likes: "10", comments: "10")

@@ -11,4 +11,5 @@ enum ErrorMessages: Error {
     case noInternet
     case noMetaFound
     case noArticlesFound
+    case imageDownloadFailed
 }

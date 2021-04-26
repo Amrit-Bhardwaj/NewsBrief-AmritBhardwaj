@@ -19,10 +19,13 @@ final class ArticleListRouter: ArticleListPresenterToRouterProtocol {
         let view = mainstoryboard.instantiateViewController(withIdentifier: String(describing: ArticleListTableViewController.self)) as! ArticleListTableViewController
         
         let presenter: ArticleListViewToPresenterProtocol & ArticleListInteractorToPresenterProtocol = ArticleListPresenter()
-        let interactor: ArticleListPresenterToInteractorProtocol = ArticleListInteractor()
+        let interactor: ArticleListPresenterToInteractorProtocol & ArticleListRemoteOutputProtocol = ArticleListInteractor()
         let router:ArticleListPresenterToRouterProtocol = ArticleListRouter()
         let fileManager: FileManagerProtocol = ArticleFileManager()
+        let remoteDataManager: ArticleListRemoteInputProtocol = ArticleListRemoteDataManager()
         
+        remoteDataManager.remoteRequestHandler = interactor
+        interactor.remoteDataManager = remoteDataManager
         view.presenter = presenter
         presenter.view = view
         presenter.router = router

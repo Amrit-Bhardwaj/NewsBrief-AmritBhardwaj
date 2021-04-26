@@ -23,16 +23,18 @@ final class ArticleDetailsRouter: ArticleDetailsPresenterToRouterProtocol {
         let view = ArticleDetailTableViewController(nibName: String(describing: ArticleDetailTableViewController.self),
                                                     bundle: Bundle.main)
         let presenter: ArticleDetailsViewToPresenterProtocol & ArticleDetailsInteractorToPresenterProtocol = ArticleDetailsPresenter()
-        let interactor: ArticleDetailsPresenterToInteractorProtocol = ArticleDetailsIntereactor()
+        let interactor: ArticleDetailsPresenterToInteractorProtocol & ArticleDetailsRemoteOutputProtocol = ArticleDetailsIntereactor()
         let router:ArticleDetailsPresenterToRouterProtocol = ArticleDetailsRouter()
-        
+        let remoteDataManager: ArticleDetailsRemoteInputProtocol = ArticleDetailRemoteDataManager()
+            
+        interactor.remoteDataManager = remoteDataManager
+        remoteDataManager.remoteRequestHandler = interactor
         view.presenter = presenter
         presenter.view = view
         presenter.article = article
         presenter.router = router
         presenter.interactor = interactor
         interactor.presenter = presenter
-        
         return view
     }
     

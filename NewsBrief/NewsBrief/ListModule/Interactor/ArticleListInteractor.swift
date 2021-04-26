@@ -15,6 +15,7 @@ final class ArticleListInteractor {
     var presenter: ArticleListInteractorToPresenterProtocol?
     var databaseManager: DatabaseManagerProtocol?
     var fileManager: FileManagerProtocol?
+    var remoteDataManager: ArticleListRemoteInputProtocol?
     
     private var articles: [ArticleModel] = []
     
@@ -29,6 +30,8 @@ final class ArticleListInteractor {
     
     /// Page Size to Fetch
     private var pageSize = "30"
+    
+    private var articleResponse: [ArticleModel] = []
     
     /// Current count of articles downloaded
     private var currentCount: Int {
@@ -50,87 +53,17 @@ final class ArticleListInteractor {
     /// This function is used to fetch the Article Details from remote
     func fetchArticleDetails() {
         if NetworkReachabilityManager.shared.connectedToNetwork() {
-            performFetch()
-        } else {
-            self.presenter?.onFetchFailed(withError: .noInternet)
-        }
-    }
-    
-    /// This function is used to perform fetch task
-    private func performFetch() {
-        
-        guard !isFetchInProgress else {
-            return
-        }
-        
-        isFetchInProgress = true
-        
-        /// ArticleDetails Task, Fetching 30 Items per page
-        let articleDetailsTask = GetArticleDetailsTask(apiKey: Api.key, country: ParamKeys.us, category: ParamKeys.business, pageSize: self.pageSize, page: String(self.currentPage))
-        
-        /// Dispatcher instance to dispatch tasks
-        let dispatcher = NetworkDispatcher(environment: Environment(Env.debug.rawValue, host: AppConstants.baseUrl))
-        
-        articleDetailsTask.execute(in: dispatcher) { [weak self] (json) in
             
-            DispatchQueue.main.async { [self] in
-                
-                /// Incrementing the Current page count after previous page is downloaded
-                self?.currentPage += 1
-                self?.isFetchInProgress = false
-                
-                /// Parsing the Response Object
-                if let jsonData = json as? [String: AnyObject],
-                   let totalResults = jsonData[JSONKeys.totalResults] as? Int,
-                   let articles = jsonData[JSONKeys.articles] as? [AnyObject] {
-                    
-                    /// Setting the total Results count
-                    self?.total = totalResults
-                    
-                    /// Collecting the Article Response for the page requested
-                    var articleResponse: [ArticleModel] = []
-                    for article in articles {
-                        if let article = article as? [String: AnyObject] {
-                            let newArticle = ArticleModel(jsonData: article)
-                            articleResponse.append(newArticle)
-                        }
-                    }
-                    
-                    /// Retrieving the article Image Urls for each article response
-                    var articleUrls: [String?] = []
-                    for responseItem in articleResponse {
-                        articleUrls.append(responseItem.urlToImage)
-                    }
-                    
-                    /// Performing the Download of all the images for the current page
-                    self?.downloadImage(withUrls: articleUrls) { (success) in
-                        
-                        /// Setting the image Data to the response Objects
-                        for index in 0..<articleResponse.count {
-                            articleResponse[index].imageData = success[index]
-                        }
-                        
-                        self?.articles.append(contentsOf: articleResponse)
-                        
-                        /// If the current page is not the first one, we calculate indexPath to reload
-                        if let currentPage = self?.currentPage, currentPage > 2 {
-                            let indexPathsToReload = self?.calculateIndexPathsToReload(from: articleResponse)
-                            
-                            self?.presenter?.onFetchCompleted(with: indexPathsToReload)
-                            
-                        } else {
-                            self?.presenter?.onFetchCompleted(with: .none)
-                        }
-                        
-                    } failure: { (error) in
-                        self?.presenter?.onFetchFailed(withError: .noArticlesFound)
-                    }
-                }
+            guard !isFetchInProgress else {
+                return
             }
             
-        } failure: { [weak self] (error) in
-            self?.isFetchInProgress = false
-            self?.presenter?.onFetchFailed(withError: .noArticlesFound)
+            isFetchInProgress = true
+            
+            remoteDataManager?.retrieveArticleDetails(forPageSize: self.pageSize, andCurrentPage: String(self.currentPage))
+            
+        } else {
+            self.presenter?.onFetchFailed(withError: .noInternet)
         }
     }
     
@@ -143,58 +76,6 @@ final class ArticleListInteractor {
         let startIndex = articles.count - newArticles.count
         let endIndex = startIndex + newArticles.count
         return (startIndex..<endIndex).map { IndexPath(row: $0, section: 0) }
-    }
-    
-    
-    /// This function is used to download the images associated with the current page
-    ///
-    /// - Parameters:
-    ///   - urls: The image urls for the current page
-    ///   - success: Success Block
-    ///   - failure: Failure Block
-    private func downloadImage(withUrls urls: [String?], success: @escaping (([Data?]) -> Void),
-                               failure: @escaping ((Error?) -> Void)) {
-        
-        /// Dispatch group is used to perform concurrent fetch of all the image Data for a given Page
-        let group = DispatchGroup()
-        
-        var imageDataArray = [Data?].init(repeating: nil, count: urls.count)
-        
-        for index in 0..<urls.count {
-            
-            guard let url = urls[index] else {
-                continue
-            }
-            
-            /// Entering the Group
-            group.enter()
-            
-            let dispatcher = NetworkDispatcher(environment: Environment(Env.debug.rawValue, host: url))
-            let attachmentDownloadTask = DownloadAttachmentDataTask(path: StringConstants.empty)
-            attachmentDownloadTask.execute(in: dispatcher) { (data) in
-                
-                if let data = data as? Data {
-                    imageDataArray[index] = data
-                    
-                    /// Saving the fetched image to fileSystem, FileName is the Hash of the Url, We can use other hashing to set the filename uniquely
-                    self.saveToFileSystem(withFileName: String(url.hash), fileData: data)
-                    
-                    /// Leaving the group after download is successful
-                    group.leave()
-                }
-                
-            } failure: { (error) in
-                NSLog("Could not download the image for \(String(describing: index))")
-                
-                /// Leaving the group if the download fails
-                group.leave()
-            }
-        }
-        
-        group.notify(queue: .main) {
-            /// returning the image data array after the downloads are complete
-            success(imageDataArray)
-        }
     }
     
     /// This function is used to save the data with the fileName into FileSystem
@@ -244,5 +125,55 @@ extension ArticleListInteractor: ArticleListPresenterToInteractorProtocol {
         let articleID = articleId(fromUrl: articleData.url)
         
         return Article(author: articleData.author, description: articleData.description, image: articleData.imageData, title: articleData.title, publishedDate: articleData.publishedAt, content: articleData.content, articleID: articleID)
+    }
+}
+
+extension ArticleListInteractor: ArticleListRemoteOutputProtocol {
+    
+    func onArticleDetailsRetrieved(totalCount count: Int, articleDataModel dataModel: [ArticleModel]) {
+        
+        /// Incrementing the Current page count after previous page is downloaded
+        self.currentPage += 1
+        self.isFetchInProgress = false
+        self.total = count
+        self.articleResponse = dataModel
+        
+        /// Retrieving the article Image Urls for each article response
+        var articleUrls: [String?] = []
+        for responseItem in dataModel {
+            articleUrls.append(responseItem.urlToImage)
+        }
+        
+        self.remoteDataManager?.retrieveArticleImages(forArticleUrls: articleUrls)
+    }
+    
+    func onArticleImagesRetrieved(imageDataArray imageData: [Data?], forArticleUrls urls: [String?]) {
+        
+        /// Saving the fetched image to fileSystem, FileName is the Hash of the Url, We can use other hashing to set the filename uniquely
+        for index in 0..<urls.count {
+            self.saveToFileSystem(withFileName: urls[index] ?? StringConstants.empty, fileData: imageData[index] ?? Data())
+        }
+        
+        /// Setting the image Data to the response Objects
+        for index in 0..<articleResponse.count {
+            articleResponse[index].imageData = imageData[index]
+        }
+        
+        self.articles.append(contentsOf: articleResponse)
+        
+        /// If the current page is not the first one, we calculate indexPath to reload
+        if self.currentPage > 2 {
+            let indexPathsToReload = self.calculateIndexPathsToReload(from: articleResponse)
+            
+            self.presenter?.onFetchCompleted(with: indexPathsToReload)
+            
+        } else {
+            self.presenter?.onFetchCompleted(with: .none)
+        }
+    }
+    
+    func onError(withError error: ErrorMessages) {
+        self.isFetchInProgress = false
+        self.presenter?.onFetchFailed(withError: .noArticlesFound)
     }
 }

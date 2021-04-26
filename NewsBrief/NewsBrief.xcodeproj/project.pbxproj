@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		5B15D3072631547200A742CB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5B15D3062631547200A742CB /* Localizable.strings */; };
+		5B23CB55263733A0009BEE47 /* ArticleDetailInteractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B23CB54263733A0009BEE47 /* ArticleDetailInteractorTests.swift */; };
+		5B23CB5D26374087009BEE47 /* ArticleDetailRemoteDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B23CB5C26374087009BEE47 /* ArticleDetailRemoteDataManager.swift */; };
+		5B23CB6926374E15009BEE47 /* ArticleListRemoteDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B23CB6826374E15009BEE47 /* ArticleListRemoteDataManager.swift */; };
 		5B54A4F6262FD95C00981640 /* ArticleDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B54A4F4262FD95C00981640 /* ArticleDetailTableViewController.swift */; };
 		5B54A4F7262FD95C00981640 /* ArticleDetailTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B54A4F5262FD95C00981640 /* ArticleDetailTableViewController.xib */; };
 		5B54A505262FDA1100981640 /* TitleSubTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B54A503262FDA1100981640 /* TitleSubTitleTableViewCell.swift */; };
@@ -83,6 +86,9 @@
 
 /* Begin PBXFileReference section */
 		5B15D3062631547200A742CB /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = NewsBrief/DetailModule/View/Localizable.strings; sourceTree = SOURCE_ROOT; };
+		5B23CB54263733A0009BEE47 /* ArticleDetailInteractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailInteractorTests.swift; sourceTree = "<group>"; };
+		5B23CB5C26374087009BEE47 /* ArticleDetailRemoteDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailRemoteDataManager.swift; sourceTree = "<group>"; };
+		5B23CB6826374E15009BEE47 /* ArticleListRemoteDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListRemoteDataManager.swift; sourceTree = "<group>"; };
 		5B54A4F4262FD95C00981640 /* ArticleDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailTableViewController.swift; sourceTree = "<group>"; };
 		5B54A4F5262FD95C00981640 /* ArticleDetailTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArticleDetailTableViewController.xib; sourceTree = "<group>"; };
 		5B54A503262FDA1100981640 /* TitleSubTitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSubTitleTableViewCell.swift; sourceTree = "<group>"; };
@@ -170,6 +176,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5B23CB61263740B6009BEE47 /* Remote */ = {
+			isa = PBXGroup;
+			children = (
+				5B23CB5C26374087009BEE47 /* ArticleDetailRemoteDataManager.swift */,
+			);
+			path = Remote;
+			sourceTree = "<group>";
+		};
+		5B23CB6D26374EF3009BEE47 /* Remote */ = {
+			isa = PBXGroup;
+			children = (
+				5B23CB6826374E15009BEE47 /* ArticleListRemoteDataManager.swift */,
+			);
+			path = Remote;
+			sourceTree = "<group>";
+		};
 		5B54A4F0262FD14100981640 /* FileManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -200,6 +222,7 @@
 			children = (
 				5B54A5382630129E00981640 /* Presenter */,
 				5B54A53C263012AA00981640 /* Protocols */,
+				5B23CB61263740B6009BEE47 /* Remote */,
 				5B54A5342630129400981640 /* Interactor */,
 				5B54A4FB262FD96300981640 /* View */,
 				5B54A548263012FD00981640 /* Router */,
@@ -286,6 +309,7 @@
 			isa = PBXGroup;
 			children = (
 				5B7595CF262DE89A00739D9F /* ArticleDetailPresenterTests.swift */,
+				5B23CB54263733A0009BEE47 /* ArticleDetailInteractorTests.swift */,
 				5BA4106A263578C700354A0E /* ArticleListPresenterTests.swift */,
 				5B7595D1262DE89A00739D9F /* Info.plist */,
 			);
@@ -314,6 +338,7 @@
 		5BBF143D262E93E900A8F0A9 /* ListModule */ = {
 			isa = PBXGroup;
 			children = (
+				5B23CB6D26374EF3009BEE47 /* Remote */,
 				5BBF1464262E979B00A8F0A9 /* Presenter */,
 				5BBF1457262E972500A8F0A9 /* Protocols */,
 				5BBF145B262E973E00A8F0A9 /* Interactor */,
@@ -568,6 +593,7 @@
 				5B54A5302630121A00981640 /* ArticleDetailsIntereactor.swift in Sources */,
 				5BBF1477262E989100A8F0A9 /* Response.swift in Sources */,
 				5B54A544263012F800981640 /* ArticleDetailsRouter.swift in Sources */,
+				5B23CB5D26374087009BEE47 /* ArticleDetailRemoteDataManager.swift in Sources */,
 				5B54A505262FDA1100981640 /* TitleSubTitleTableViewCell.swift in Sources */,
 				5B7595B8262DE89700739D9F /* SceneDelegate.swift in Sources */,
 				5BBF14C1262E9D2D00A8F0A9 /* ArticleModel.swift in Sources */,
@@ -587,6 +613,7 @@
 				5B7595C0262DE89700739D9F /* NewsBrief.xcdatamodeld in Sources */,
 				5B54A50C262FDD0700981640 /* ImageTableViewCell.swift in Sources */,
 				5BBF147C262E98BA00A8F0A9 /* NetworkDispatcher.swift in Sources */,
+				5B23CB6926374E15009BEE47 /* ArticleListRemoteDataManager.swift in Sources */,
 				5BBF1490262E999600A8F0A9 /* Task.swift in Sources */,
 				5B54A513262FDEEA00981640 /* DetailsTableViewCell.swift in Sources */,
 				5BCA57742630717D0052DFC8 /* DatabaseManager.swift in Sources */,
@@ -601,6 +628,7 @@
 			files = (
 				5B7595D0262DE89A00739D9F /* ArticleDetailPresenterTests.swift in Sources */,
 				5BA4106B263578C700354A0E /* ArticleListPresenterTests.swift in Sources */,
+				5B23CB55263733A0009BEE47 /* ArticleDetailInteractorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -771,6 +799,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = TYC3G2DP96;
 				INFOPLIST_FILE = NewsBrief/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -790,6 +819,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = TYC3G2DP96;
 				INFOPLIST_FILE = NewsBrief/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

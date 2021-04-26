@@ -65,6 +65,8 @@ class ArticleListMockView: ArticleListPresenterToViewProtocol {
 
 class ArticleListIntereactorMock: ArticleListPresenterToInteractorProtocol {
     
+    var remoteDataManager: ArticleListRemoteInputProtocol?
+    
     var presenter: ArticleListInteractorToPresenterProtocol?
     
     var databaseManager: DatabaseManagerProtocol?

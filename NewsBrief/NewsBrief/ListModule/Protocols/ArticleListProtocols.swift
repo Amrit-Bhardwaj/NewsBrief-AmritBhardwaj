@@ -42,6 +42,7 @@ protocol ArticleListPresenterToInteractorProtocol: class {
     
     var presenter: ArticleListInteractorToPresenterProtocol? {get set}
     var databaseManager: DatabaseManagerProtocol? {get set}
+    var remoteDataManager: ArticleListRemoteInputProtocol? {get set}
     var fileManager: FileManagerProtocol? {get set}
     func fetchArticleDetails()
     func totalArticleCount() -> Int?
@@ -69,4 +70,21 @@ protocol FileManagerProtocol: class {
     
     func save(fileName: String, file: Data)
     func openFile(fileName: String) -> Data?
+}
+
+/// This Protocol contains the APIs to communicate from INTERACTOR -> REMOTECLIENT
+protocol ArticleListRemoteInputProtocol: class {
+    
+    var remoteRequestHandler: ArticleListRemoteOutputProtocol? { get set }
+    
+    func retrieveArticleDetails(forPageSize pageSize: String?, andCurrentPage currentPage: String?)
+    func retrieveArticleImages(forArticleUrls urls: [String?])
+}
+
+/// This Protocol contains the APIs to communicate from REMOTECLIENT -> INTERACTOR
+protocol ArticleListRemoteOutputProtocol: class {
+    
+    func onArticleDetailsRetrieved(totalCount count: Int, articleDataModel dataModel: [ArticleModel])
+    func onArticleImagesRetrieved(imageDataArray imageData: [Data?], forArticleUrls urls: [String?])
+    func onError(withError error: ErrorMessages)
 }
